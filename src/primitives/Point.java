@@ -10,6 +10,9 @@ public class Point {
     }
     // parameter constructor
     public Point(Double3 xyz) {
+        if (xyz.equals(Double3.ZERO)) {
+            throw new IllegalArgumentException("Cannot create zero vector");
+        }
         this.xyz = xyz;
     }
 
@@ -22,5 +25,24 @@ public class Point {
 
     @Override
     public String toString(){return ""+xyz;}
+
+
+
+public Vector subtract(Point p){
+    return new Vector(this.xyz.subtract(p.xyz));
+}
+
+public Point add(Vector vec){
+    return new Point(this.xyz.add(vec.xyz));
+}
+
+public double distanceSquared(Point p){
+    Vector vec= subtract(this);
+    return vec.xyz.d1*vec.xyz.d1 + vec.xyz.d2*vec.xyz.d2 + vec.xyz.d3*vec.xyz.d3;
+}
+
+public double distance(Point p) {
+    return Math.sqrt(this.distanceSquared(p));
+}
 
 }
