@@ -4,7 +4,11 @@ public class Ray {
     final private  Point head;
     final private  Vector direction;
 
-    // parameter constructor
+    /**
+     *
+     * @param p
+     * @param vec
+     */
     public Ray(Point p, Vector vec) {
         this.head = p;
         this.direction=vec.normalize();
@@ -19,4 +23,4 @@ public class Ray {
     public String toString(){return super.toString();}
 
 }
-
+//soni hachaya beseret
