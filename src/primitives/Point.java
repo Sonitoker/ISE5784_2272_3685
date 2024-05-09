@@ -30,9 +30,6 @@ public class Point {
      * @throws IllegalArgumentException if xyz represents the zero vector.
      */
     public Point(Double3 xyz) {
-        if (xyz.equals(Double3.ZERO)) {
-            throw new IllegalArgumentException("Cannot create zero vector");
-        }
         this.xyz = xyz;
     }
 
