@@ -73,8 +73,8 @@ public class Point {
      * @return The square of the Euclidean distance between this point and the specified point.
      */
     public double distanceSquared(Point p) {
-        Vector vec = subtract(p);
-        return vec.xyz.d1 * vec.xyz.d1 + vec.xyz.d2 * vec.xyz.d2 + vec.xyz.d3 * vec.xyz.d3;
+       Double3 d = this.xyz.subtract(p.xyz);
+        return d.d1 * d.d1 + d.d2 * d.d2 + d.d3 * d.d3;
     }
 
     /**
