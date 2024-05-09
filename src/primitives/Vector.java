@@ -35,23 +35,14 @@ public class Vector extends Point {
     }
 
 
-    /**
-     * Checks if this Vector is equal to another object.
-     *
-     * @param obj The object to compare to.
-     * @return True if the objects are equal, otherwise false.
-     */
+
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
 
 
-    /**
-     * Returns a string representation of this Vector.
-     *
-     * @return A string representation of this Vector.
-     */
+
     @Override
     public String toString() {
         return super.toString();

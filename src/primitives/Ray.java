@@ -19,23 +19,14 @@ public class Ray {
     }
 
 
-    /**
-     * Checks if this Ray is equal to another object.
-     *
-     * @param obj The object to compare to.
-     * @return True if the objects are equal, otherwise false.
-     */
+
     @Override
     public boolean equals(Object obj){
         return (obj instanceof Ray other) && this.head.equals(other.head) && this.direction.equals(other.direction);
     }
 
 
-    /**
-     * Returns a string representation of this Ray.
-     *
-     * @return A string representation of this Ray.
-     */
+
     @Override
     public String toString() {
         return "Ray: Head = " + head + ", Direction = " + direction;

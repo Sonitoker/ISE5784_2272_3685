@@ -37,23 +37,14 @@ public class Point {
     }
 
 
-    /**
-     * Checks if this Point is equal to another object.
-     *
-     * @param obj The object to compare to.
-     * @return True if the objects are equal, otherwise false.
-     */
+
     @Override
     public boolean equals(Object obj){
         if(this==obj) return true;
         return obj instanceof Point other && this.xyz.equals(other.xyz);
     }
 
-    /**
-     * Returns a string representation of this Point.
-     *
-     * @return A string representation of this Point.
-     */
+
     @Override
     public String toString(){return ""+xyz;}
 
