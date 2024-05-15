@@ -28,6 +28,9 @@ public class Sphere extends RadialGeometry {
      * @return The normal vector to the sphere at the given point.
      */
     public Vector getNormal(Point p) {
-        return null; // Placeholder, actual implementation needed
+        if (p.equals(center)){
+            throw new IllegalArgumentException("point p equals center:  not valid ");
+        }
+        return  p.subtract(center).normalize();
     }
 }
