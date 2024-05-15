@@ -1,50 +1,60 @@
 package primitives;
 
+import java.util.Objects;
+
 /**
  * Represents a point in three-dimensional space.
  */
 public class Point {
-    /** The coordinates of the point in three-dimensional space. */
-    final protected  Double3 xyz;
+    /**
+     * The coordinates of the point in three-dimensional space.
+     */
+    final protected Double3 xyz;
 
-    /** A constant representing the origin point (0, 0, 0). */
-    public static final Point ZERO=new Point(0,0,0);
+    /**
+     * A constant representing the origin point (0, 0, 0).
+     */
+    public static final Point ZERO = new Point(0, 0, 0);
 
     /**
      * Constructs a new Point with the specified coordinates.
      *
-     * @param d1 The x-coordinate of the point.
-     * @param d2 The y-coordinate of the point.
-     * @param d3 The z-coordinate of the point.
+     * @param x The x-coordinate of the point.
+     * @param y The y-coordinate of the point.
+     * @param z The z-coordinate of the point.
      */
-    public Point(double d1, double d2, double d3) {
-        this.xyz =new Double3(d1,d2,d3);
+    public Point(double x, double y, double z) {
+        //this.xyz =new Double3(x,y,z);
+        this(new Double3(x, y, z));
     }
-
 
 
     /**
      * Constructs a new Point with the specified Double3 coordinates.
      *
      * @param xyz The Double3 containing the coordinates of the point.
-     * @throws IllegalArgumentException if xyz represents the zero vector.
      */
-    public Point(Double3 xyz) {
+    Point(Double3 xyz) {
         this.xyz = xyz;
     }
 
 
-
     @Override
-    public boolean equals(Object obj){
-        if(this==obj) return true;
-        return obj instanceof Point other && this.xyz.equals(other.xyz);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Point point)) return false;
+        return xyz.equals(point.xyz);
     }
 
+    @Override
+    public int hashCode() {
+        return xyz.hashCode();
+    }
 
     @Override
-    public String toString(){return ""+xyz;}
-
+    public String toString() {
+        return "Point{" + xyz + '}';
+    }
 
     /**
      * Computes the vector obtained by subtracting another point from this point.
@@ -53,7 +63,7 @@ public class Point {
      * @return The vector representing the difference between this point and the specified point.
      */
     public Vector subtract(Point p) {
-        return new Vector(this.xyz.subtract(p.xyz));
+        return new Vector(xyz.subtract(p.xyz));
     }
 
     /**
@@ -63,7 +73,7 @@ public class Point {
      * @return The point resulting from adding the specified vector to this point.
      */
     public Point add(Vector vec) {
-        return new Point(this.xyz.add(vec.xyz));
+        return new Point(xyz.add(vec.xyz));
     }
 
     /**
@@ -73,8 +83,11 @@ public class Point {
      * @return The square of the Euclidean distance between this point and the specified point.
      */
     public double distanceSquared(Point p) {
-       Double3 d = this.xyz.subtract(p.xyz);
-        return d.d1 * d.d1 + d.d2 * d.d2 + d.d3 * d.d3;
+        double xx = (xyz.d1 - p.xyz.d1) * (xyz.d1 - p.xyz.d1);
+        double yy = (xyz.d2 - p.xyz.d2) * (xyz.d2 - p.xyz.d2);
+        double zz = (xyz.d3 - p.xyz.d3) * (xyz.d3 - p.xyz.d3);
+
+        return xx + yy + zz;
     }
 
     /**
@@ -84,6 +97,6 @@ public class Point {
      * @return The Euclidean distance between this point and the specified point.
      */
     public double distance(Point p) {
-        return Math.sqrt(this.distanceSquared(p));
+        return Math.sqrt(distanceSquared(p));
     }
 }

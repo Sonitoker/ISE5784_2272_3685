@@ -1,13 +1,11 @@
 //Soni Toker 326202272 sonitoker@gmail.com
 //Odeya Lapian 212833685 odeyah1515@gmail.com
 
-package test;
+package primitives;
 
 import static java.lang.System.out;
 
 import static primitives.Util.isZero;
-
-import primitives.*;
 
 /**
  * Test program for the 1st stage

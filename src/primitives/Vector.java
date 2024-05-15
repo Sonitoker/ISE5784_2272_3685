@@ -1,5 +1,10 @@
 package primitives;
 
+import javax.naming.OperationNotSupportedException;
+
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * Represents a vector in three-dimensional space.
  */
@@ -8,16 +13,13 @@ public class Vector extends Point {
     /**
      * Constructs a new Vector with the specified coordinates.
      *
-     * @param d1 The x-coordinate of the vector.
-     * @param d2 The y-coordinate of the vector.
-     * @param d3 The z-coordinate of the vector.
+     * @param x The x-coordinate of the vector.
+     * @param y The y-coordinate of the vector.
+     * @param z The z-coordinate of the vector.
      * @throws IllegalArgumentException if the vector is the zero vector.
      */
-    public Vector(double d1, double d2, double d3) {
-        super(d1, d2, d3);
-        if (d1 == 0 && d2 == 0 && d3 == 0) {
-            throw new IllegalArgumentException("Zero vector is not allowed.");
-        }
+    public Vector(double x, double y, double z) {
+        this(new Double3(x,y,z));
     }
 
 
@@ -27,7 +29,7 @@ public class Vector extends Point {
      * @param xyz The Double3 containing the coordinates of the vector.
      * @throws IllegalArgumentException if the vector is the zero vector.
      */
-    public Vector(Double3 xyz) {
+     Vector(Double3 xyz) {
         super(xyz);
         if (xyz.equals(Double3.ZERO)) {
             throw new IllegalArgumentException("Cannot create zero vector");
@@ -35,17 +37,18 @@ public class Vector extends Point {
     }
 
 
-
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector vector)) return false;
+        return xyz.equals(vector.xyz);
     }
 
 
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Vector{" + xyz + '}';
     }
 
     /**
@@ -87,9 +90,10 @@ public class Vector extends Point {
      * @return A new vector representing the cross product of this vector and the specified vector.
      */
     public Vector crossProduct(Vector vec) {
-        return new Vector(((this.xyz.d2 * vec.xyz.d3) - (this.xyz.d3 * vec.xyz.d2)),
-                ((this.xyz.d3 * vec.xyz.d1) - (this.xyz.d1 * vec.xyz.d3)),
-                ((this.xyz.d1 * vec.xyz.d2) - (this.xyz.d2 * vec.xyz.d1)));
+        return new Vector(
+                ((xyz.d2 * vec.xyz.d3) - (xyz.d3 * vec.xyz.d2)),
+                ((xyz.d3 * vec.xyz.d1) - (xyz.d1 * vec.xyz.d3)),
+                ((xyz.d1 * vec.xyz.d2) - (xyz.d2 * vec.xyz.d1)));
     }
 
     /**
@@ -98,7 +102,7 @@ public class Vector extends Point {
      * @return The square of the length of this vector.
      */
     public double lengthSquared() {
-        return this.dotProduct(this);
+        return ((xyz.d1 * xyz.d1) + (xyz.d2 * xyz.d2) + (xyz.d3 * xyz.d3));
     }
 
 
@@ -114,14 +118,14 @@ public class Vector extends Point {
 
 
     /**
-     * Normalizes this vector (i.e., scales it to have unit length).
-     *
-     * @return A new vector representing this vector normalized to have unit length.
+     * normalize the vector
+     * @return the normalized vector
      */
     public Vector normalize() {
-        return new Vector(((this.xyz.d1) / (this.length())),
-                ((this.xyz.d2) / (this.length())),
-                ((this.xyz.d3) / (this.length())));
+        double length = alignZero(length());
+        if (length == 0)
+            throw new ArithmeticException("Cannot normalize Vector(0,0,0)");
+        return new Vector(xyz.scale(1 / length));
     }
 
 }
