@@ -1,14 +1,34 @@
 package primitives;
 
+import geometries.Polygon;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class VectorTests {
 
+
     private static final double DELTA = 0.0000001;
 
+    /**
+     * Test method for Vector co
+     * {@link primitives.Vector#crossProduct(primitives.Vector)}.
+     */
+
+    @Test
+    public void testConstructor() {
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: constructing a vector
+        assertDoesNotThrow(() -> new Vector(1, 2, 3), "Failed constructing a correct vector");
+
+        // =============== Boundary Values Tests ==================
+        // TC02: constructing a zero vector
+        assertThrows(IllegalArgumentException.class,
+                () -> new Vector(0, 0, 0),
+                "ERROR: zero vector does not throw an exception");
+    }
     @Test
     void testAdd() {
     }
@@ -26,7 +46,7 @@ class VectorTests {
     void testCrossProduct() {
         // ============ Equivalence Partitions Tests ==============
         Vector v123 = new Vector(0, 0, 1);
-        Vector v03M2 = new Vector(1,0,0);
+        Vector v03M2 = new Vector(0,1,0);
         Vector vr = v123.crossProduct(v03M2);
         // TC01: Test that length of cross-product is proper (orthogonal vectors taken
         // for simplicity)
