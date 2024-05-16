@@ -116,10 +116,10 @@ public class PointTests {
                 DELTA,
                 "ERROR: point squared distance to itself is not zero");
 
-      }
-
-
     }
+
+
+}
 
 
 

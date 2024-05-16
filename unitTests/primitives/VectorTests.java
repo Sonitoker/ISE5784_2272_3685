@@ -14,14 +14,13 @@ class VectorTests {
 
     /**
      * Test method for Vector constructor
-     *
      */
 
     @Test
     public void testConstructor() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: constructing a vector
-        assertDoesNotThrow(() -> new Vector(1, 2, 3),"Failed constructing a correct vector");
+        assertDoesNotThrow(() -> new Vector(1, 2, 3), "Failed constructing a correct vector");
 
         // =============== Boundary Values Tests ==================
         // TC02: constructing a zero vector
@@ -29,6 +28,7 @@ class VectorTests {
                 () -> new Vector(0, 0, 0),
                 "ERROR: zero vector does not throw an exception");
     }
+
     @Test
     void testAdd() {
     }
@@ -46,7 +46,7 @@ class VectorTests {
     void testCrossProduct() {
         // ============ Equivalence Partitions Tests ==============
         Vector v123 = new Vector(0, 0, 1);
-        Vector v03M2 = new Vector(0,1,0);
+        Vector v03M2 = new Vector(0, 1, 0);
         Vector vr = v123.crossProduct(v03M2);
         // TC01: Test that length of cross-product is proper (orthogonal vectors taken
         // for simplicity)
@@ -56,7 +56,7 @@ class VectorTests {
         assertEquals(0, vr.dotProduct(v03M2), "crossProduct() result is not orthogonal to 2nd operand");
         // =============== Boundary Values Tests ==================
         // TC11: test zero vector from cross-product of parallel vectors
-        Vector vM2M4M6= new Vector(0,0,2);
+        Vector vM2M4M6 = new Vector(0, 0, 2);
         assertThrows(IllegalArgumentException.class, () -> v123.crossProduct(vM2M4M6), //
                 "crossProduct() for parallel vectors does not throw an exception");
 
@@ -77,7 +77,7 @@ class VectorTests {
 // ============ Equivalence Partitions Tests ==============
 // TC01: Simple test
         assertEquals(1d, n.lengthSquared(), 0.00001, "wrong normalized vector length");
-        assertThrows(IllegalArgumentException.class, () -> v.crossProduct(n),"normalized vector is not in the same direction");
+        assertThrows(IllegalArgumentException.class, () -> v.crossProduct(n), "normalized vector is not in the same direction");
         assertEquals(new Vector(0, 0.6, 0.8), n, "wrong normalized vector");
     }
 
