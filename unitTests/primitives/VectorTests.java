@@ -2,9 +2,11 @@ package primitives;
 
 import geometries.Polygon;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VectorTests {
@@ -20,7 +22,8 @@ class VectorTests {
     public void testConstructor() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: constructing a vector
-        assertDoesNotThrow(() -> new Vector(1, 2, 3), "Failed constructing a correct vector");
+        assertDoesNotThrow(() -> new Vector(1, 2, 3),
+                "Failed constructing a correct vector");
 
         // =============== Boundary Values Tests ==================
         // TC02: constructing a zero vector
@@ -31,15 +34,86 @@ class VectorTests {
 
     @Test
     void testAdd() {
+
+        Vector v1 = new Vector(1, 2, 3);
+        Vector v2 = new Vector(0, 0, 1);
+        Vector v3 = new Vector(1, 2, 4);
+        Vector vOpposite1 = new Vector(-1, -2, -3);
+
+        // ============ Equivalence Partitions Tests ==============
+        //TC01:adding a vector to a vector
+        assertEquals(v3,
+                v2.add(v1),
+                "ERROR: Vector + Vector does not work correctly");
+
+        // =============== Boundary Values Tests ==================
+        //TC02: adding a vector to an opposite vector so the result is ZERO
+        assertThrows(IllegalArgumentException.class,
+                () -> v1.add(vOpposite1),
+                "ERROR: Vector + -itself does not throw an exception");
     }
 
     @Test
+    void testSubstruct() {
+
+        Vector v1 = new Vector(1, 2, 3);
+        Vector v2 = new Vector(0, 0, 1);
+        Vector v3 = new Vector(1, 2, 2);
+
+        // ============ Equivalence Partitions Tests ==============
+        //TC01:substructing a vector to a vector
+        assertEquals(v3,
+                v1.subtract(v2),
+                "ERROR: Vector - Vector does not work correctly");
+
+        // =============== Boundary Values Tests ==================
+        //TC02: substructing a vector from itself
+        assertThrows(IllegalArgumentException.class,
+                () -> v1.subtract(v1),
+                "ERROR: Vector - itself does not throw an exception");
+    }
+
+
+
+
+
+
+    @Test
     void testScale() {
+        Vector v1= new Vector(1,1,1);
+        // ============ Equivalence Partitions Tests ==============
+        //TC01: dot product between 2 vectors
+        assertEquals(new Vector(2,2,2),
+                v1.scale(2),
+                "ERROR: multiplying a vector by a double does not work correctly");
+        // =============== Boundary Values Tests ==================
+        // TC02 testing for 0*v1 throw an exception
+        assertThrows(IllegalArgumentException.class,
+                () -> v1.scale(0),
+                "ERROR: multiplying a vector by zero does not throw an exception");
     }
 
     @Test
     void testDotProduct() {
+        Vector v1= new Vector(1,1,1);
+        Vector v2= new Vector(2,0,0);
+        Vector v3= new Vector(0,2,0);
+        // ============ Equivalence Partitions Tests ==============
+        //TC01: dot product between 2 vectors
+        assertEquals(2,
+                v1.dotProduct(v2),
+                DELTA,
+                "ERROR: dotProduct() wrong value");
+
+        // =============== Boundary Values Tests ==================
+        //TC02: dot product between 2  orthogonal vectors
+        assertEquals(0,
+                v3.dotProduct(v2),
+                DELTA,
+                "ERROR: dotProduct() for orthogonal vectors is not zero");
+
     }
+
 
     @Disabled
     @Test
@@ -62,13 +136,35 @@ class VectorTests {
 
     }
 
-    @Test
-    void testLengthSquared() {
-    }
+
 
     @Test
     void testLength() {
+        // ============ Equivalence Partitions Tests ==============
+        //TC01:vector length
+        Vector vec1= new Vector(0,0,2);
+        assertEquals(2,
+                vec1.length(),
+                DELTA,
+                "ERROR: length() wrong value");
     }
+
+    @Test
+    void testLengthSquared() {
+        // ============ Equivalence Partitions Tests ==============
+        //TC01:vector length
+        Vector vec1= new Vector(0,0,2);
+        assertEquals(4,
+                vec1.lengthSquared(),
+                DELTA,
+                "ERROR: lengthSquared() wrong value");
+    }
+
+
+
+
+
+
 
     @Test
     void testNormalize() {
@@ -76,9 +172,16 @@ class VectorTests {
         Vector n = v.normalize();
 // ============ Equivalence Partitions Tests ==============
 // TC01: Simple test
-        assertEquals(1d, n.lengthSquared(), 0.00001, "wrong normalized vector length");
-        assertThrows(IllegalArgumentException.class, () -> v.crossProduct(n), "normalized vector is not in the same direction");
-        assertEquals(new Vector(0, 0.6, 0.8), n, "wrong normalized vector");
+        assertEquals(1d,
+                n.lengthSquared(),
+                DELTA,
+                "ERROR: the normalized vector is not a unit vector");
+        assertThrows(IllegalArgumentException.class,
+                () -> v.crossProduct(n),
+                "ERROR: the normalized vector is not parallel to the original one");
+        assertEquals(new Vector(0, 0.6, 0.8),
+                n,
+                "wrong normalized vector");
     }
 
 }
