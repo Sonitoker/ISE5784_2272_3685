@@ -13,15 +13,15 @@ class VectorTests {
     private static final double DELTA = 0.0000001;
 
     /**
-     * Test method for Vector co
-     * {@link primitives.Vector#crossProduct(primitives.Vector)}.
+     * Test method for Vector constructor
+     *
      */
 
     @Test
     public void testConstructor() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: constructing a vector
-        assertDoesNotThrow(() -> new Vector(1, 2, 3), "Failed constructing a correct vector");
+        assertDoesNotThrow(() -> new Vector(1, 2, 3),"Failed constructing a correct vector");
 
         // =============== Boundary Values Tests ==================
         // TC02: constructing a zero vector
