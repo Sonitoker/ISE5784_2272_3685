@@ -18,7 +18,23 @@ public class Ray {
         this.direction=vec.normalize();
     }
 
+    /**
+     * Returns the head point of the ray.
+     *
+     * @return the head point of the ray.
+     */
+    public Point getHead() {
+        return head;
+    }
 
+    /**
+     * Returns the direction of the ray.
+     *
+     * @return the direction of the ray.
+     */
+    public Vector getDir() {
+        return direction;
+    }
 
     @Override
     public boolean equals(Object obj){
@@ -31,6 +47,7 @@ public class Ray {
     public String toString() {
         return "Ray: Head = " + head + ", Direction = " + direction;
     }
+
 
 }
 
