@@ -7,9 +7,20 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Tube class.
+ */
 class TubeTests {
+
+    /**
+     * Delta value for accuracy when comparing the numbers of type 'double' in
+     * assertEquals
+     */
     private final double DELTA = 0.000001;
 
+    /**
+     * Test method for {@link geometries.Tube#getNormal(Point)(geometries.Tube)}.
+     */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============

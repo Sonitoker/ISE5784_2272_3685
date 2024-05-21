@@ -7,6 +7,10 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+/**
+ * Unit tests for the Cylinder class.
+ */
 class CylinderTests {
 
 
@@ -16,6 +20,9 @@ class CylinderTests {
      */
     private final double DELTA = 0.000001;
 
+    /**
+     * Test method for {@link geometries.Cylinder#getNormal(Point)(geometries.Cylinder)}.
+     */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============

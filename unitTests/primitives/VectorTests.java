@@ -9,6 +9,9 @@ import org.junit.jupiter.api.function.Executable;
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Vector class.
+ */
 class VectorTests {
 
 
@@ -32,6 +35,10 @@ class VectorTests {
                 "ERROR: zero vector does not throw an exception");
     }
 
+
+    /**
+     * Test method for {@link primitives.Vector#add(primitives.Vector)}.
+     */
     @Test
     void testAdd() {
 
@@ -53,37 +60,39 @@ class VectorTests {
                 "ERROR: Vector + -itself does not throw an exception");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#subtract(Point)(primitives.Vector)}.
+     */
     @Test
-    void testSubstruct() {
+    void testSubtract() {
 
         Vector v1 = new Vector(1, 2, 3);
         Vector v2 = new Vector(0, 0, 1);
         Vector v3 = new Vector(1, 2, 2);
 
         // ============ Equivalence Partitions Tests ==============
-        //TC01:substructing a vector to a vector
+        //TC01:subtracting a vector to a vector
         assertEquals(v3,
                 v1.subtract(v2),
                 "ERROR: Vector - Vector does not work correctly");
 
         // =============== Boundary Values Tests ==================
-        //TC02: substructing a vector from itself
+        //TC02: subtracting a vector from itself
         assertThrows(IllegalArgumentException.class,
                 () -> v1.subtract(v1),
                 "ERROR: Vector - itself does not throw an exception");
     }
 
 
-
-
-
-
+    /**
+     * Test method for {@link primitives.Vector#scale(double)(primitives.Vector)}.
+     */
     @Test
     void testScale() {
-        Vector v1= new Vector(1,1,1);
+        Vector v1 = new Vector(1, 1, 1);
         // ============ Equivalence Partitions Tests ==============
         //TC01: dot product between 2 vectors
-        assertEquals(new Vector(2,2,2),
+        assertEquals(new Vector(2, 2, 2),
                 v1.scale(2),
                 "ERROR: multiplying a vector by a double does not work correctly");
         // =============== Boundary Values Tests ==================
@@ -93,11 +102,14 @@ class VectorTests {
                 "ERROR: multiplying a vector by zero does not throw an exception");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#dotProduct(primitives.Vector)}.
+     */
     @Test
     void testDotProduct() {
-        Vector v1= new Vector(1,1,1);
-        Vector v2= new Vector(2,0,0);
-        Vector v3= new Vector(0,2,0);
+        Vector v1 = new Vector(1, 1, 1);
+        Vector v2 = new Vector(2, 0, 0);
+        Vector v3 = new Vector(0, 2, 0);
         // ============ Equivalence Partitions Tests ==============
         //TC01: dot product between 2 vectors
         assertEquals(2,
@@ -115,7 +127,9 @@ class VectorTests {
     }
 
 
-    @Disabled
+    /**
+     * Test method for {@link primitives.Vector#crossProduct(primitives.Vector)}.
+     */
     @Test
     void testCrossProduct() {
         // ============ Equivalence Partitions Tests ==============
@@ -137,23 +151,28 @@ class VectorTests {
     }
 
 
-
+    /**
+     * Test method for {@link primitives.Vector#length()(primitives.Vector)}.
+     */
     @Test
     void testLength() {
         // ============ Equivalence Partitions Tests ==============
         //TC01:vector length
-        Vector vec1= new Vector(0,0,2);
+        Vector vec1 = new Vector(0, 0, 2);
         assertEquals(2,
                 vec1.length(),
                 DELTA,
                 "ERROR: length() wrong value");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#lengthSquared()(primitives.Vector)}.
+     */
     @Test
     void testLengthSquared() {
         // ============ Equivalence Partitions Tests ==============
         //TC01:vector length
-        Vector vec1= new Vector(0,0,2);
+        Vector vec1 = new Vector(0, 0, 2);
         assertEquals(4,
                 vec1.lengthSquared(),
                 DELTA,
@@ -161,17 +180,15 @@ class VectorTests {
     }
 
 
-
-
-
-
-
+    /**
+     * Test method for {@link primitives.Vector#normalize()(primitives.Vector)}.
+     */
     @Test
     void testNormalize() {
         Vector v = new Vector(0, 3, 4);
         Vector n = v.normalize();
-// ============ Equivalence Partitions Tests ==============
-// TC01: Simple test
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Simple test
         assertEquals(1d,
                 n.lengthSquared(),
                 DELTA,

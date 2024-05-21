@@ -6,6 +6,9 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Plane class.
+ */
 class PlaneTests {
 
     /**
@@ -14,27 +17,30 @@ class PlaneTests {
      */
     private final double DELTA = 0.000001;
 
+    /**
+     * Test method for {@link geometries.Plane#getNormal(Point)(geometries.Plane)}.
+     */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
-        // TC01: There is a simple single test here - using a plane
+        // There is a simple single test here - using a plane
         Point[] pts =
                 {new Point(0, 0, 1),
                         new Point(1, 0, 0),
                         new Point(0, 1, 0)};
         Plane plane= new Plane(new Point(1,0,0),new Point(0,1,0), new Point(0,0,1));
-        // ensure there are no exceptions
+        // TC01: ensure there are no exceptions
         assertDoesNotThrow(() -> plane.getNormal(new Point(0, 0, 1)), "");
-        // generate the test result
+        // TC02: Generate the test result
         Vector result = plane.getNormal(new Point(0, 0, 1));
         // ensure |result| = 1
         assertEquals(1, result.length(), DELTA, "Plane's normal is not a unit vector");
-        // ensure the result is orthogonal to all the edges
+        // TC03: ensure the result is orthogonal to all the edges
         for (int i = 0; i < 2; ++i)
             assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 2 : i - 1])),
                     DELTA,
                     "Planes's normal is not orthogonal to one of the edges");
-        // Also check the opposite direction of the normal vector
+        // TC04: Also check the opposite direction of the normal vector
         Vector oppositeResult = result.scale(-1);
         for (int i = 0; i < 2; ++i) {
             assertEquals(0d, oppositeResult.dotProduct(pts[i].subtract(pts[i == 0 ? 2 : i - 1])),

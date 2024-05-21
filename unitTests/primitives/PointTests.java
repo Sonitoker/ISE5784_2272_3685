@@ -6,19 +6,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Unit tests for primitives.Point class
+ * Unit tests for the Point class
  */
 public class PointTests {
     private static final double DELTA = 0.0000001;
 
     /**
-     *
+     * Test method for {@link primitives.Point#subtract(primitives.Point)}.
      */
     @Test
     void testSubtruct() {
         // ============ Equivalence Partitions Tests ==============
 
-        //TC01:substructing vectors
+        //TC01:subtracting vectors
         Vector v1 = new Vector(1, 2, 3);
         Vector v2 = new Vector(0, 0, 1);
         Vector v3 = new Vector(1, 2, 2);
@@ -28,7 +28,7 @@ public class PointTests {
                 "ERROR: (point2 - point1) does not work correctly");
 
         // =============== Boundary Values Tests ==================
-        //TC02 substructing equal vectors
+        //TC02 subtracting equal vectors
         assertThrows(IllegalArgumentException.class,
                 () -> v1.subtract(v1),
                 "ERROR: (point - itself) does not throw an exception");
@@ -37,6 +37,9 @@ public class PointTests {
         ;
     }
 
+    /**
+     * Test method for {@link primitives.Point#add(Vector)(primitives.Point)}.
+     */
     @Test
     void testAdd() {
 
@@ -61,6 +64,9 @@ public class PointTests {
     }
 
 
+    /**
+     * Test method for {@link primitives.Point#distance(primitives.Point)}.
+     */
     @Test
     void testDistance() {
 
@@ -89,6 +95,9 @@ public class PointTests {
 
     }
 
+    /**
+     * Test method for {@link primitives.Point#distanceSquared(primitives.Point)}.
+     */
     @Test
     void testDistanceSquared() {
 
