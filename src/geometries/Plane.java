@@ -7,6 +7,9 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * The Plane class represents a plane geometry in 3D space.
  * It implements the Geometry interface.
@@ -67,6 +70,20 @@ public class Plane implements Geometry {
 
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return null;
+
+        if (q.equals(ray.getHead())) { // if the ray starts from the plane it doesn't cut the plane at all
+            return null;
+        }
+        double nv = normal.dotProduct(ray.getDir());
+        if (isZero(nv)) {
+            return null;
+        }
+        double t = alignZero(normal.dotProduct(q.subtract(ray.getHead())) / nv);
+        if (t > 0) {
+            return List.of(ray.getHead().add(ray.getDir().scale(t)));
+        } else {
+            return null;
+
+        }
     }
 }

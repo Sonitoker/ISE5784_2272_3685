@@ -17,6 +17,7 @@ public class Sphere extends RadialGeometry {
 
     /**
      * Constructs a Sphere object with the given radius and center point.
+     *
      * @param radius The radius of the sphere.
      * @param center The center point of the sphere.
      */
@@ -27,18 +28,46 @@ public class Sphere extends RadialGeometry {
 
     /**
      * Returns the normal vector to the sphere at the given point.
+     *
      * @param p The point on the surface of the sphere.
      * @return The normal vector to the sphere at the given point.
      */
     public Vector getNormal(Point p) {
-        if (p.equals(center)){
+        if (p.equals(center)) {
             throw new IllegalArgumentException("point p equals center:  not valid ");
         }
-        return  p.subtract(center).normalize();
+        return p.subtract(center).normalize();
     }
 
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return List.of();
+        Point P0 = ray.getHead(); // ray's starting point
+        Point O = center; //the sphere's center point
+        Vector V = ray.getDir(); // "the v vector" from the presentation
+        if (O.equals(P0)) {
+            return List.of(P0.add(V.scale(radius)));
+        }
+        Vector U = O.subtract(P0);
+        double tm = V.dotProduct(U);
+        double d = Math.sqrt(U.lengthSquared() - tm * tm);
+        if (d >= radius) { //no intersections
+            return null;
+        }
+        double th = Math.sqrt(radius * radius - d * d);
+        double t1 = tm - th;
+        double t2 = tm + th;
+        if (t1 > 0 && t2 > 0) {
+            Point p1 = P0.add(V.scale(t1));
+            Point p2 = P0.add(V.scale(t2));
+            return List.of(p1, p2);
+        } else if (t1 > 0) {
+            Point p1 = P0.add(V.scale(t1));
+            return List.of(p1);
+        } else if (t2 > 0) {
+            Point p2 = P0.add(V.scale(t2));
+            return List.of(p2);
+        }
+        return null;
+
     }
 }

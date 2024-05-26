@@ -11,12 +11,12 @@ public class Geometries implements Intersectable{
 
 
     List<Intersectable> geometries= new LinkedList<Intersectable>();
-
+    public Geometries(){}
     public Geometries(Intersectable... geometries) {
         add(geometries);
     }
 
-    private void add(Intersectable... geometries) {
+    public void add(Intersectable... geometries) {
         Collections.addAll(this.geometries, geometries); //פונקציה קיימת שמכניסה לרשימה את הכל- במקם לולאה
     }
 

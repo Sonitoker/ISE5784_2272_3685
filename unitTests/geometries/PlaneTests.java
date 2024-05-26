@@ -79,43 +79,59 @@ class PlaneTests {
      */
     @Test
     public void testFindIntersections() {
-        Sphere sphere = new Sphere(p100, 1d);
-        final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
-        final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
-        final var exp = List.of(gp1, gp2);
-        final Vector v310 = new Vector(3, 1, 0);
-        final Vector v110 = new Vector(1, 1, 0);
-        final Point p01 = new Point(-1, 0, 0);
-        // ============ Equivalence Partitions Tests ==============
-        // TC01: Ray's line is outside the sphere (0 points)
-        assertNull(sphere.findIntersections(new Ray(p01, v110)), "Ray's line out of sphere");
-        // TC02: Ray starts before and crosses the sphere (2 points)
-        final var result1 = sphere.findIntersections(new Ray(p01, v310))
-                .stream().sorted(Comparator.comparingDouble(p) -> p.distance(p01)))
- .toList();
-        assertEquals(2, result1.size(), "Wrong number of points");
-        assertEquals(exp, result1, "Ray crosses sphere");
-        // TC03: Ray starts inside the sphere (1 point)
- ...
-        // TC04: Ray starts after the sphere (0 points)
- ...
-        // =============== Boundary Values Tests ==================
-        // **** Group: Ray's line crosses the sphere (but not the center)
-        // TC11: Ray starts at sphere and goes inside (1 points)
-        // TC12: Ray starts at sphere and goes outside (0 points)
-        // **** Group: Ray's line goes through the center
-        // TC13: Ray starts before the sphere (2 points)
-        // TC14: Ray starts at sphere and goes inside (1 points)
-        // TC15: Ray starts inside (1 points)
-        // TC16: Ray starts at the center (1 points)
-        // TC17: Ray starts at sphere and goes outside (0 points)
-        // TC18: Ray starts after sphere (0 points)
-        // **** Group: Ray's line is tangent to the sphere (all tests 0 points)
-        // TC19: Ray starts before the tangent point
-        // TC20: Ray starts at the tangent point
-        // TC21: Ray starts after the tangent point
-        // **** Group: Special cases
-        // TC22: Ray's line is outside, ray is orthogonal to ray start to sphere's center line
+        // ================ EP: The Ray must be neither orthogonal nor parallel to the plane ==================
+        Plane plane = new Plane(new Point(1,0,1),
+                new Point(0,1,1),
+                new Point(1,1,1));
+        //TC01: Ray intersects the plane
+        assertEquals(List.of(new Point(1,0.5,1)),
+                plane.findIntersections(new Ray(new Point(0,0.5,0),
+                        new Vector(1,0,1))),
+                "Ray does not intersects the plane");
+
+        //TC02: Ray does not intersect the plane
+        assertNull(plane.findIntersections(new Ray(new Point(1,0.5,2),
+                        new Vector(1,2,5))),
+                "Ray intersects the plane");
+
+
+        // ====================== Boundary Values Tests =======================//
+        // **** Group: Ray is parallel to the plane
+        //TC10: The ray included in the plane
+        assertNull(plane.findIntersections(new Ray(new Point(1,2,1), new Vector(1,0,0))),
+                "Does not return null- when ray included in the plane");
+
+        //TC11: The ray not included in the plane
+        assertNull(plane.findIntersections(new Ray(new Point(1,2,2),
+                        new Vector(1,0,0))),
+                "Does not return null- when ray not included in the plane");
+
+        // **** Group: Ray is orthogonal to the plane
+        //TC12: before the plane
+        assertEquals(List.of(new Point(1,1,1)),
+                plane.findIntersections(new Ray(new Point(1,1,0),
+                        new Vector(0,0,1))),
+                "Ray is orthogonal to the plane, before the plane");
+
+        //TC13: on the plane
+        assertNull(plane.findIntersections(new Ray(new Point(1,2,1),
+                        new Vector(0,0,1))),
+                "Does not return null- when ray is orthogonal to the plane, on the plane");
+
+        //TC14: after the plane
+        assertNull(plane.findIntersections(new Ray(new Point(1,2,2),
+                        new Vector(0,0,1))),
+                "Does not return null- when ray is orthogonal to the plane, after the plane");
+
+        // **** Group: Ray is neither orthogonal nor parallel to
+        //TC15: Ray begins at the plane
+        assertNull(plane.findIntersections(new Ray(new Point(2,4,1),
+                        new Vector(2,3,5))),
+                "Does not return null- when ray is neither orthogonal nor parallel to ray and begin at the plane");
+
+        //TC16: Ray begins in the same point which appears as reference point in the plane
+        assertNull(plane.findIntersections(new Ray(new Point(1,0,1), new Vector(2,3,5))),
+                "Does not return null- when ray begins in the same point which appears as reference point in the plane");
     }
 }
 
