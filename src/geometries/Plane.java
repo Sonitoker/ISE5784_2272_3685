@@ -80,7 +80,7 @@ public class Plane implements Geometry {
         }
         double t = alignZero(normal.dotProduct(q.subtract(ray.getHead())) / nv);
         if (t > 0) {
-            return List.of(ray.getHead().add(ray.getDir().scale(t)));
+            return List.of(ray.getPoint(t));
         } else {
             return null;
 

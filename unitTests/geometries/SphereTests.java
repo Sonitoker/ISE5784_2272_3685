@@ -31,6 +31,8 @@ public class SphereTests {
         // TC01: ensure there are no exceptions
         assertDoesNotThrow(() -> sphere.getNormal(new Point(0, 0, 1)),
                 "Failed test: exception thrown");
+        assertThrows(IllegalArgumentException.class, () -> sphere.getNormal(new Point(0, 0, 0)),
+                "Failed test: exception not thrown");
         // TC02: generate the test result
         Vector result = sphere.getNormal(new Point(0, 0, 1));
         // TC03: Make sure |result| = 1

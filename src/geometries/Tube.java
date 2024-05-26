@@ -49,7 +49,7 @@ public class Tube extends RadialGeometry {
             if(isZero(t))
                 o=axis.getHead();
             else
-                o = axis.getHead().add(axis.getDir().scale(t));
+                o = axis.getPoint(t);
 
             // Calculate the normal vector by subtracting the projection point from the given point
             Vector normal = p.subtract(o).normalize();

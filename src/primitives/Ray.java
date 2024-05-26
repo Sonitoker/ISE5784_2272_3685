@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.isZero;
+
 /**
  * Represents a ray in three-dimensional space, defined by a starting point (head) and a direction.
  */
@@ -46,6 +48,18 @@ public class Ray {
     @Override
     public String toString() {
         return "Ray: Head = " + head + ", Direction = " + direction;
+    }
+
+    /**
+     * Returns a point on the ray at a distance t from the head.
+     *
+     * @param t The distance from the head of the ray.
+     * @return The point on the ray at the specified distance from the head.
+     */
+    public Point getPoint(double t){
+        if(isZero(t))
+           return head;
+        return head.add(direction.scale(t));
     }
 
 

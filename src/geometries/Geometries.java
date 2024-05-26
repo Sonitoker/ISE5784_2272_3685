@@ -17,11 +17,25 @@ public class Geometries implements Intersectable{
     }
 
     public void add(Intersectable... geometries) {
-        Collections.addAll(this.geometries, geometries); //פונקציה קיימת שמכניסה לרשימה את הכל- במקם לולאה
+        Collections.addAll(this.geometries, geometries); //add all the geometries to the list
     }
 
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return null;
+        List<Point> result = null;
+        for (Intersectable geometry : geometries) {
+            if(geometry.findIntersections(ray)!=null){
+                List<Point> tempIntersections = geometry.findIntersections(ray);
+                if (tempIntersections != null) {
+                    if (result == null) {
+                        result = new LinkedList<>();
+                    }
+                    result.addAll(tempIntersections);
+                }
+            }
+            }
+
+
+        return result;
     }
 }
