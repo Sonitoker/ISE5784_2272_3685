@@ -59,6 +59,11 @@ public class Plane implements Geometry {
         return normal;
     }
 
+
+    public Point getQ() {
+        return q;
+    }
+
     /**
      * Returns the normal vector to the plane.
      *

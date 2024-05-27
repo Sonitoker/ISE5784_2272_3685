@@ -5,6 +5,9 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.Comparator;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -45,7 +48,6 @@ class CylinderTests {
         assertEquals((new Vector(1, 0, 0)),
                 result,
                 "Cylinder's normal at (1,1,1) is incorrect");
-
 
 
         // Test normal on the bottom base of the cylinder
@@ -117,8 +119,9 @@ class CylinderTests {
 
     }
 
-
 }
+
+
 
 
 

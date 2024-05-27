@@ -11,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GeometriesTests {
 
+
+    /**
+     * Test method for {@link geometries.Geometries#findIntersections(Ray)}.
+     */
     @Test
     void testFindIntersection() {
         // ============ Equivalence Partitions Tests ==============

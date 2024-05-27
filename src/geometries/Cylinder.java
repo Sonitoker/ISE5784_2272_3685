@@ -4,7 +4,10 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import static primitives.Util.isZero;
 
 /**
  * Represents a cylinder in 3D space, extending from a given axis with a certain radius and height.
@@ -57,5 +60,8 @@ public class Cylinder extends Tube{
         Point o = p0.add(dir.scale(t));
         return p.subtract(o).normalize();
     }
+
+
+
 
 }
