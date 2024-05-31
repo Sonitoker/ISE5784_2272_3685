@@ -58,7 +58,7 @@ public class Triangle extends Polygon {
         Vector v1 = p3.subtract(p1);
         Vector v2 = p.subtract(p1);
 
-        // Compute dot products
+        // Compute dot products in order to calculate barycentric coordinates
         double dot00 = v0.dotProduct(v0);
         double dot01 = v0.dotProduct(v1);
         double dot02 = v0.dotProduct(v2);
@@ -66,12 +66,14 @@ public class Triangle extends Polygon {
         double dot12 = v1.dotProduct(v2);
 
         // Compute barycentric coordinates
+        // u, v, and w are the barycentric coordinates of the point- we can present every point as a linear combination of the vertices
+        //invDenom is the inverse of the matrix determinant that we use to calculate the barycentric coordinates by its formula
         double invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
         double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
         double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
         double w = 1.0 - u - v;
 
-        // Check if point is in triangle
+        // Check if point is in triangle- if the barycentric coordinates are positive and their sum is less than or equal to 1
         if (u > 0 && v > 0 && w > 0 && u + v + w <= 1) {
             return true;
         }
