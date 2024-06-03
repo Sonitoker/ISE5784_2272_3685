@@ -8,8 +8,13 @@ import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
-
+/**
+ * Camera class represents a camera in the 3D space.
+ * The camera has a location, a direction, and a size of the view plane.
+ * The camera can construct a ray through a pixel in the view plane.
+ */
 public class Camera implements Cloneable {
+
 
     private Point p0;
     private Vector vTo, vUp, vRight;
