@@ -1,8 +1,10 @@
 package renderer;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
 
 import java.util.MissingResourceException;
 
@@ -20,6 +22,8 @@ public class Camera implements Cloneable {
     private Point p0;
     private Vector vTo, vUp, vRight;
     private double width = 0d, height = 0d, distance = 0d;
+    private ImageWriter imageWriter;
+    private RayTracerBase rayTracer;
 
     /**
      * camera getter
@@ -126,6 +130,26 @@ public class Camera implements Cloneable {
         }
 
         /**
+         * Set the image writer
+         *
+         * @param imageWriter the image writer
+         */
+        public Builder setImageWriter(ImageWriter imageWriter) {
+            camera.imageWriter = imageWriter;
+            return this;
+        }
+
+        /**
+         * Set the ray tracer
+         *
+         * @param rayTracer the ray tracer
+         */
+        public Builder setRayTracer(RayTracerBase rayTracer) {
+            camera.rayTracer = rayTracer;
+            return this;
+        }
+
+        /**
          * Build the camera
          *
          * @return the camera
@@ -152,6 +176,12 @@ public class Camera implements Cloneable {
             if (isZero(camera.distance)) {
                 throw new MissingResourceException(description, className, "distance");
             }
+            if(camera.imageWriter == null) {
+                throw new MissingResourceException(description, className, "imageWriter");
+            }
+            if(camera.rayTracer == null) {
+                throw new MissingResourceException(description, className, "rayTracer");
+            }
 
             if (camera.width < 0) {
                 throw new IllegalArgumentException("width must be positive");
@@ -170,6 +200,7 @@ public class Camera implements Cloneable {
             if (camera.vTo.length() != 1 || camera.vRight.length() != 1 || camera.vUp.length() != 1) {
                 throw new IllegalArgumentException("The 3 vectors must be normalized");
             }
+
             try {
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException exception) {
@@ -202,8 +233,66 @@ public class Camera implements Cloneable {
         return new Ray(p0, pIJ.subtract(p0).normalize()); //return the ray from the camera to the center of the pixel
 
     }
+    /**
+     * Render the image
+     */
+    public Camera renderImage() {
 
-}
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+        for (int i = 0; i < nY; i++) {
+            for (int j = 0; j < nX; j++) {
+                castRay(nX, nY, j, i);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Cast a ray through a pixel in the view plane
+     *
+     * @param nX the number of pixels in the x direction
+     * @param nY the number of pixels in the y direction
+     * @param j  the x index of the pixel
+     * @param i  the y index of the pixel
+     */
+    private void castRay(int nX, int nY, int j, int i) {
+        Ray ray = constructRay(nX, nY, j, i);
+        Color color= rayTracer.traceRay(ray);
+        imageWriter.writePixel(j, i, color);
+    }
+
+
+    /**
+     * Print a grid on the view plane
+     * @param interval
+     * @param color
+     */
+        public Camera printGrid(int interval, Color color) {
+            //=== running on the view plane===//
+            for (int i = 0; i < imageWriter.getNx(); i++) {
+                for (int j = 0; j < imageWriter.getNy(); j++) {
+                    //=== create the net ===//
+                    if (i % interval == 0 || j % interval == 0) {
+                        imageWriter.writePixel(i, j, color);
+                    }
+                }
+            }
+            return this;
+        }
+
+        /**
+         * Write the image to the file
+         */
+        public void writeToImage() {
+            this.imageWriter.writeToImage();
+        }
+
+
+
+    }
+
+
 
 
 
