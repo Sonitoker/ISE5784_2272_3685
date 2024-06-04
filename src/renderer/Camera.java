@@ -8,6 +8,7 @@ import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+
 /**
  * Camera class represents a camera in the 3D space.
  * The camera has a location, a direction, and a size of the view plane.
@@ -20,36 +21,73 @@ public class Camera implements Cloneable {
     private Vector vTo, vUp, vRight;
     private double width = 0d, height = 0d, distance = 0d;
 
+    /**
+     * camera getter
+     *
+     * @return the width of the view plane
+     */
     public double getWidth() {
         return width;
     }
 
+    /**
+     * camera getter
+     *
+     * @return the height of the view plane
+     */
     public double getHeight() {
         return height;
     }
 
+    /**
+     * camera getter
+     *
+     * @return the distance from the camera to the view plane
+     */
     public double getDistance() {
         return distance;
     }
 
+    /**
+     * camera constructor
+     */
     private Camera() {
     }
 
-     public static Builder getBuilder() {
+    /**
+     * Builder class for the camera
+     *
+     * @return the camera builder
+     */
+    public static Builder getBuilder() {
         return new Builder();
     }
 
 
-
+    /**
+     * Camera builder class
+     * The builder constructs a camera with a location, a direction, and a size of the view plane.
+     */
     public static class Builder {
         private final Camera camera = new Camera();
 
 
+        /**
+         * Set the location of the camera
+         *
+         * @param p0 the location of the camera
+         */
         public Builder setLocation(Point p0) {
             camera.p0 = p0;
             return this;
         }
 
+        /**
+         * Set the direction of the camera
+         *
+         * @param vTo the direction of the camera- the vector from the camera to the view plane
+         * @param vUp the up direction of the camera- the vector from the camera to the top
+         */
         public Builder setDirection(Vector vTo, Vector vUp) {
             if (!isZero(vTo.dotProduct(vUp))) {
                 throw new IllegalArgumentException("the vectors must be orthogonal");
@@ -59,6 +97,12 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Set the size of the view plane
+         *
+         * @param width  the width of the view plane
+         * @param height the height of the view plane
+         */
         public Builder setVpSize(double width, double height) {
             if (width <= 0 || height <= 0) {
                 throw new IllegalArgumentException("width and height must be positive");
@@ -68,14 +112,24 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Set the distance between the camera and the view plane
+         *
+         * @param distance the distance between the camera and the view plane
+         */
         public Builder setVpDistance(double distance) {
             if (distance <= 0) {
                 throw new IllegalArgumentException("distance must be positive");
             }
-            camera.distance= distance;
+            camera.distance = distance;
             return this;
         }
 
+        /**
+         * Build the camera
+         *
+         * @return the camera
+         */
         public Camera build() {
 
             final String description = "Missing rendering data";
@@ -125,19 +179,29 @@ public class Camera implements Cloneable {
         }
 
     }
- public Ray constructRay(int nX,int nY, int j, int i){
-      double Ry=height/nY;
-      double Rx=width/nX;
-     Point pIJ=p0;
-      double Yi=-(i-(nY-1)/2d)*Ry;
-     double Xj=(j-(nX-1)/2d)*Rx;
-     if(!isZero(Xj)) pIJ=pIJ.add(vRight.scale(Xj));
-     if(!isZero(Yi)) pIJ=pIJ.add(vUp.scale(Yi));
 
-     pIJ=pIJ.add(vTo.scale(distance));
-     return new Ray(p0,pIJ.subtract(p0).normalize());
+    /**
+     * Construct a ray through a pixel in the view plane
+     *
+     * @param nX the number of pixels in the x direction
+     * @param nY the number of pixels in the y direction
+     * @param j  the x index of the pixel
+     * @param i  the y index of the pixel
+     * @return the ray through the pixel
+     */
+    public Ray constructRay(int nX, int nY, int j, int i) {
+        double Ry = height / nY;
+        double Rx = width / nX;
+        Point pIJ = p0;
+        double Yi = -(i - (nY - 1) / 2d) * Ry;
+        double Xj = (j - (nX - 1) / 2d) * Rx;
+        if (!isZero(Xj)) pIJ = pIJ.add(vRight.scale(Xj));
+        if (!isZero(Yi)) pIJ = pIJ.add(vUp.scale(Yi));
 
- }
+        pIJ = pIJ.add(vTo.scale(distance)); //pIJ is the center of the pixel in the view plane
+        return new Ray(p0, pIJ.subtract(p0).normalize()); //return the ray from the camera to the center of the pixel
+
+    }
 
 }
 

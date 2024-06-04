@@ -5,6 +5,9 @@ import primitives.Color;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Image writer tests
+ */
 class ImageWriterTests {
 
 
@@ -17,6 +20,9 @@ class ImageWriterTests {
     Color purpleColor = new Color(255d, 0d, 255d); // if r=255 the color is red (for the net)
     Color orangeColor = new Color(255d, 165d, 0d); // if r=255 the color is red (for the net)
 
+    /**
+     * Test method for {@link renderer.ImageWriter#writeToImage()}.
+     */
     @Test
     void testWriteToImage() {
         ImageWriter imageWriter = new ImageWriter("purpleOrange", nX, nY);
@@ -33,6 +39,6 @@ class ImageWriterTests {
 
 
         }
-        imageWriter.writeToImage();
+        imageWriter.writeToImage(); //write the image
     }
 }
