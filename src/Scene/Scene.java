@@ -1,8 +1,13 @@
 package Scene;
 
+import com.google.gson.Gson;
 import geometries.Geometries;
 import lighting.AmbientLight;
 import primitives.Color;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * The Scene class represents a scene in three-dimensional space.
@@ -52,4 +57,34 @@ public class Scene {
         this.geometries = geometries;
         return this;
     }
+
+
+
+    public static Scene readFromFile(String filename) {
+    try{
+        FileReader reader = new FileReader(filename);
+        Gson gson = new Gson();
+        return gson.fromJson(reader, Scene.class);
+    } catch(IOException e){
+        throw new RuntimeException(e);
+    }
+
+    }
+
+
+
+
+
+//    Gson gson = new Gson();
+//    String str = gson.toJson(scene);
+//        try {
+//        FileWriter writer = new FileWriter("scene.json");
+//        gson.toJson(scene, writer);
+//    } catch (IOException e) {
+//        throw new RuntimeException(e);
+//    }
+
+
+
+
 }

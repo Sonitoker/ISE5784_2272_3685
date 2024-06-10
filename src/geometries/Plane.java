@@ -14,7 +14,7 @@ import static primitives.Util.isZero;
  * The Plane class represents a plane geometry in 3D space.
  * It implements the Geometry interface.
  */
-public class Plane implements Geometry {
+public class Plane extends  Geometry {
 
     /**
      * A point on the plane.
