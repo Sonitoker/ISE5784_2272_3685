@@ -1,16 +1,22 @@
 package renderer;
 
-import static Scene.Scene.readFromFile;
-import static java.awt.Color.*;
 
+import static Scene.Scene.readSceneFromFile;
+import static java.awt.Color.*;
+import Scene.InterfaceAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import geometries.Intersectable;
 import org.junit.jupiter.api.Test;
 
 import geometries.Sphere;
 import geometries.Triangle;
 import lighting.AmbientLight;
 import primitives.*;
-import renderer.*;
 import Scene.Scene;
+
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Test rendering a basic image
@@ -82,20 +88,13 @@ public class RenderTests {
     /** Test for XML based scene - for bonus */
     @Test
     public void basicRenderJson() {
-        // enter XML file name and parse from XML file into scene object
-        // using the code you added in appropriate packages
-        // ...
-        // NB: unit tests is not the correct place to put XML parsing code
-
-        Scene scene= readFromFile("scene.json");
-        camera
-                .setImageWriter(new ImageWriter("json render test", 1000, 1000))
-                .setRayTracer(new SimpleRayTracer(scene))
-                .build()
-                .renderImage()
-                .printGrid(100, new Color(YELLOW))
-                .writeToImage();
-
+            Scene scene = readSceneFromFile("scene.json");
+            camera.setImageWriter(new ImageWriter("soni render test", 1000, 1000))
+                    .setRayTracer(new SimpleRayTracer(scene))
+                    .build()
+                    .renderImage()
+                    .printGrid(100, new Color(YELLOW))
+                    .writeToImage();
 
     }
 

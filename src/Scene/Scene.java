@@ -1,13 +1,22 @@
 package Scene;
 
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import geometries.Geometries;
+import geometries.Intersectable;
 import lighting.AmbientLight;
 import primitives.Color;
+import primitives.Point;
+import primitives.Ray;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * The Scene class represents a scene in three-dimensional space.
@@ -15,12 +24,13 @@ import java.io.IOException;
  */
 public class Scene {
     public String name;
-    public Color background=Color.BLACK;
-    public AmbientLight ambientLight= AmbientLight.NONE;
-    public Geometries geometries=new Geometries();
+    public Color background = Color.BLACK;
+    public AmbientLight ambientLight = AmbientLight.NONE;
+    public Geometries geometries = new Geometries();
 
     /**
      * Constructs a scene with the given name.
+     *
      * @param name The name of the scene.
      */
     public Scene(String name) {
@@ -28,8 +38,10 @@ public class Scene {
     }
 
     //setters
+
     /**
      * Sets the background color of the scene.
+     *
      * @param background The background color of the scene.
      * @return The scene object.
      */
@@ -40,6 +52,7 @@ public class Scene {
 
     /**
      * Sets the ambient light of the scene.
+     *
      * @param ambientLight The ambient light of the scene.
      * @return The scene object.
      */
@@ -50,6 +63,7 @@ public class Scene {
 
     /**
      * Sets the geometries of the scene.
+     *
      * @param geometries The geometries of the scene.
      * @return The scene object.
      */
@@ -59,31 +73,38 @@ public class Scene {
     }
 
 
-
-    public static Scene readFromFile(String filename) {
-    try{
-        FileReader reader = new FileReader(filename);
-        Gson gson = new Gson();
-        return gson.fromJson(reader, Scene.class);
-    } catch(IOException e){
-        throw new RuntimeException(e);
+    //bonus 5
+    /**
+     * reeads a scene from a file in JSON format.
+     * @param filename The name of the file to read the scene from.
+     * @return The scene object.
+     */
+    static public Scene readSceneFromFile(String filename) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Intersectable.class, new InterfaceAdapter());
+        Gson gson = gsonBuilder.create();
+        try {
+            return gson.fromJson(new FileReader(filename), Scene.class);
+        } catch (IOException e) {
+            throw new  RuntimeException(e);
+        }
     }
 
+    /**
+     * Writes the scene to a file in JSON format.
+     *
+     * @param filename The name of the file to write the scene to.
+     */
+    public void writeSceneToFile(String filename) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Intersectable.class, new InterfaceAdapter());
+        Gson gson = gsonBuilder.create();
+        try {
+            gson.toJson(this, new FileWriter(filename));
+        } catch (IOException e) {
+            throw new  RuntimeException(e);
+        }
     }
-
-
-
-
-
-//    Gson gson = new Gson();
-//    String str = gson.toJson(scene);
-//        try {
-//        FileWriter writer = new FileWriter("scene.json");
-//        gson.toJson(scene, writer);
-//    } catch (IOException e) {
-//        throw new RuntimeException(e);
-//    }
-
 
 
 
