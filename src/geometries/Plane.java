@@ -74,7 +74,7 @@ public class Plane extends  Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
         if (q.equals(ray.getHead())) { // if the ray starts from the plane it doesn't cut the plane at all
             return null;
@@ -85,10 +85,11 @@ public class Plane extends  Geometry {
         }
         double t = alignZero(normal.dotProduct(q.subtract(ray.getHead())) / nv);
         if (t > 0) {
-            return List.of(ray.getPoint(t));
+            return List.of(new GeoPoint(this,ray.getPoint(t)));
         } else {
             return null;
 
         }
     }
+
 }

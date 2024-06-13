@@ -5,6 +5,7 @@ import primitives.Point;
 import primitives.Ray;
 
 import java.util.List;
+import geometries.Intersectable.GeoPoint;
 
 /**
  * SimpleRayTracer class represents a simple ray tracer.
@@ -26,22 +27,20 @@ public class SimpleRayTracer extends RayTracerBase{
      */
     @Override
     public Color traceRay(Ray ray) {
-        List<Point> intersections  = this.scene.geometries.findIntersections(ray);
+        var intersections  = this.scene.geometries.findGeoIntersections(ray);
 
         if (intersections == null)
             return this.scene.background;
 
-        Point closestPoint = ray.findClosestPoint(intersections);
-
-        return calcColor(closestPoint);
+        return calcColor(ray.findClosestGeoPoint(intersections));
     }
     /**
      * Get the color of an intersection point
-     * @param point point of intersection
+     * @param gp point of intersection and the geometry
      * @return Color of the intersection point
      */
-    private Color calcColor(Point point) {
-        return this.scene.ambientLight.getIntensity();
+    private Color calcColor(GeoPoint gp) {
+        return this.scene.ambientLight.getIntensity().add(gp.geometry.getEmission());
     }
 }
 

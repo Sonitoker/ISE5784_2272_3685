@@ -96,7 +96,7 @@ public class Polygon extends  Geometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         //check if the ray intersects the plane of the polygon- the polygon is on a plane
         Plane plane = new Plane(vertices.get(0), vertices.get(1), vertices.get(2));
         List<Point> intersections = plane.findIntersections(ray);
@@ -122,6 +122,6 @@ public class Polygon extends  Geometry {
             }
         }
         //if all dot products are positive, the point is inside the polygon
-        return intersections;
+        return List.of(new GeoPoint(this, p));
     }
 }

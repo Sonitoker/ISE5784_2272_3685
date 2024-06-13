@@ -85,7 +85,7 @@ public class RenderTests {
                 .writeToImage();
     }
 
-    /** Test for XML based scene - for bonus */
+    /** Test for json based scene - for bonus */
     @Test
     public void basicRenderJson() {
             Scene scene = readSceneFromFile("scene.json");

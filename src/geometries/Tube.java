@@ -67,7 +67,7 @@ public class Tube extends RadialGeometry {
      * @return A list of intersection points with the tube, or null if there are no intersections.
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         Vector axisHead = axis.getDir();
         Vector v = ray.getDir();
         Point p0 = ray.getHead();
@@ -97,7 +97,7 @@ public class Tube extends RadialGeometry {
         try {
             deltaP = p0.subtract(axis.getHead());
         } catch (IllegalArgumentException e1) {
-            return vVa == 0 ? alignZero(t) <= 0 ? null : List.of(ray.getPoint(radius)) : alignZero(t) <= 0 ? null : List.of(ray.getPoint(t));
+            return vVa == 0 ? alignZero(t) <= 0 ? null : List.of(new GeoPoint(this,ray.getPoint(radius))) : alignZero(t) <= 0 ? null : List.of(new GeoPoint(this,ray.getPoint(t)));
         }
 
         double dPVAxis = alignZero(deltaP.dotProduct(axisHead));
@@ -110,7 +110,7 @@ public class Tube extends RadialGeometry {
             try {
                 dPMinusdPVaVa = deltaP.subtract(dPVaVa);
             } catch (IllegalArgumentException e1) {
-                return alignZero(t) <= 0 ? null : List.of(ray.getPoint(t));
+                return alignZero(t) <= 0 ? null : List.of(new GeoPoint(this,ray.getPoint(t)));
             }
         }
 
@@ -136,18 +136,18 @@ public class Tube extends RadialGeometry {
      * @param tOffset The offset value of the intersection points.
      * @return A list of intersection points with the tube.
      */
-    private List<Point> buildIntersectionsList(Ray ray, double tMiddle, double tOffset) {
-        List<Point> intersections = new LinkedList<>();
+    private List<GeoPoint> buildIntersectionsList(Ray ray, double tMiddle, double tOffset) {
+        List<GeoPoint> intersections = new LinkedList<>();
 
         double t1 = alignZero(tMiddle - tOffset);
         double t2 = alignZero(tMiddle + tOffset);
 
         if (t1 > 0) {
-            intersections.add(ray.getPoint(t1));
+            intersections.add(new GeoPoint(this,ray.getPoint(t1)));
         }
 
         if (t2 > 0) {
-            intersections.add(ray.getPoint(t2));
+            intersections.add(new GeoPoint(this,ray.getPoint(t2)));
         }
 
         return intersections.isEmpty() ? null : intersections;

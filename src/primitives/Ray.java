@@ -3,6 +3,7 @@ package primitives;
 import java.util.List;
 
 import static primitives.Util.isZero;
+import geometries.Intersectable.GeoPoint;
 
 /**
  * Represents a ray in three-dimensional space, defined by a starting point (head) and a direction.
@@ -67,14 +68,26 @@ public class Ray {
     /**
      * Finds the closest point to the head of the ray from a list of points.
      *
-     * @param points The list of points to search.
+     * @param points The list of points to check.
      * @return The closest point to the head of the ray.
      */
     public Point findClosestPoint(List<Point> points) {
-        Point closest = null;
+        return points == null || points.isEmpty() ? null
+                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+    }
+
+
+    /**
+     * Finds the closest point to the head of the ray from a list of GeoPoints.
+     *
+     * @param intersections The list of GeoPoints to check.
+     * @return The closest point to the head of the ray.
+     */
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> intersections) {
+        GeoPoint closest = null;
         double minDistance = Double.POSITIVE_INFINITY;
-        for (Point p : points) {
-            double distance = head.distance(p);
+        for (GeoPoint p : intersections) {
+            double distance = head.distance(p.point);
             if (distance < minDistance) {
                 minDistance = distance;
                 closest = p;

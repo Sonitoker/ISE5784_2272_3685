@@ -1,5 +1,6 @@
 package renderer;
 
+import Scene.Scene;
 import org.junit.jupiter.api.*;
 import primitives.*;
 import geometries.*;
@@ -53,7 +54,7 @@ public class CameraIntegrationsTest {
     @Test
     public void CameraRaySphereIntegration() {
 
-        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).build();
+        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange",800,500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
         Camera camera2 = cameraBuilder.setLocation(new Point(0, 0, 0.5)).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).build();
 
 
@@ -84,7 +85,7 @@ public class CameraIntegrationsTest {
      */
     @Test
     public void CameraRayTriangleIntegration() {
-        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).build();
+        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange",800,500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
 
 
         //TC01: Small triangle (1 intersection)
@@ -106,7 +107,7 @@ public class CameraIntegrationsTest {
 
     @Test
     public void CameraRayPlaneIntegration() {
-        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, 1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).build();
+        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, 1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange",800,500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
 
 
         //TC01: The plane parallel to the View Plane (9 intersections)

@@ -18,6 +18,10 @@ public class InterfaceAdapter implements JsonSerializer<Object>, JsonDeserialize
         }
     }
 
+    /**
+        * This is the implementation of the JsonDeserializer interface. It generates the object from the JSON element.
+     * convert the JsonElement to the object of the specified type.
+     */
     @Override
     public Object deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -27,6 +31,10 @@ public class InterfaceAdapter implements JsonSerializer<Object>, JsonDeserialize
         return jsonDeserializationContext.deserialize(jsonObject.get(DATA), klass);
     }
 
+    /**
+        * This is the implementation of the JsonSerializer interface. It generates the JSON element from the object.
+     * convert the object to JsonElement.
+     */
     @Override
     public JsonElement serialize(Object obj, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
