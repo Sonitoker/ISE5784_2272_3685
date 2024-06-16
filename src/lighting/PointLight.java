@@ -29,7 +29,7 @@ public class PointLight extends Light implements LightSource {
      * @param kC
      * @return
      */
-    PointLight setKc(double kC) {
+    public PointLight setKc(double kC) {
         this.kC = kC;
         return this;
     }
@@ -39,7 +39,7 @@ public class PointLight extends Light implements LightSource {
      * @param kL
      * @return
      */
-    PointLight setKl(double kL) {
+    public PointLight setKl(double kL) {
         this.kL = kL;
         return this;
     }
@@ -49,7 +49,7 @@ public class PointLight extends Light implements LightSource {
      * @param kQ
      * @return
      */
-    PointLight setKq(double kQ) {
+    public PointLight setKq(double kQ) {
         this.kQ = kQ;
         return this;
     }

@@ -29,7 +29,7 @@ public class Scene {
     public Color background = Color.BLACK;
     public AmbientLight ambientLight = AmbientLight.NONE;
     public Geometries geometries = new Geometries();
-    List<LightSource> lights= new LinkedList<>();
+    public List<LightSource> lights= new LinkedList<>();
     /**
      * Constructs a scene with the given name.
      *

@@ -8,6 +8,7 @@ import primitives.Vector;
 public class SpotLight extends PointLight{
    /** vector representing the direction of the light source */
     private Vector direction;
+    double narrowBeam;
 
     /**
      * Constructs a SpotLight object with the given direction, intensity, and position.
@@ -17,14 +18,14 @@ public class SpotLight extends PointLight{
      */
     public SpotLight(Vector direction, Color intensity, Point position) {
         super(intensity, position);
-        this.direction = direction;
+        this.direction = direction.normalize();
     }
     /**
      * Setter for kC- the constant attenuation coefficient.
      * @param kC
      * @return
      */
-    SpotLight setKc(double kC) {
+    public SpotLight setKc(double kC) {
         super.setKc(kC) ;
         return this;
     }
@@ -34,7 +35,7 @@ public class SpotLight extends PointLight{
      * @param kL
      * @return
      */
-    SpotLight setKl(double kL) {
+    public SpotLight setKl(double kL) {
         super.setKl(kL);
         return this;
     }
@@ -44,8 +45,18 @@ public class SpotLight extends PointLight{
      * @param kQ
      * @return
      */
-    SpotLight setKq(double kQ) {
+    public SpotLight setKq(double kQ) {
         super.setKq(kQ);
+        return this;
+    }
+
+    /**
+     * Setter for the narrow beam of the light source.
+     * @param narrowBeam
+     * @return
+     */
+    public SpotLight setNarrowBeam(double narrowBeam) {
+        this.narrowBeam = narrowBeam;
         return this;
     }
 
@@ -58,6 +69,10 @@ public class SpotLight extends PointLight{
             return Color.BLACK;
         }
         // The intensity of the color of the light
-        return (super.getIntensity(p).scale(Math.max(0, projection)));
+        return  narrowBeam!=1
+        ?  super.getIntensity(p).scale(Math.pow(Math.max(0, projection), narrowBeam))
+        : (super.getIntensity(p).scale(Math.max(0, projection)));
     }
+
+
 }
