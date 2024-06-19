@@ -13,7 +13,45 @@ import static primitives.Util.alignZero;
  * A simple ray tracer is a ray tracer that does not perform any ray tracing.
  */
 public class SimpleRayTracer extends RayTracerBase{
-   /**
+
+    /**
+     * The delta value for comparing double values.
+     */
+    private static final double DELTA = 0.1;
+
+    /**
+     * check if the point is shaded
+     * @param gp
+     * @param l
+     * @param n
+     * @return
+     */
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
+        Point point = gp.point.add(epsVector);
+        Ray ray = new Ray(point, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
+        if (intersections == null) return true;
+        //if there are points in the intersections list that are closer to the
+        //point than light source – return false
+        //otherwise – return true
+         double lightDistance = light.getDistance(gp.point);
+        for (GeoPoint geoPoint : intersections) {
+            if (alignZero(geoPoint.point.distance(gp.point) - lightDistance) <= 0)
+                //if (gp.geometry.getKt().equals(new Double3(0))) {
+                    return false;
+
+        }
+        return true;
+    }
+
+
+
+
+
+
+    /**
      * Constructs a SimpleRayTracer object with the given scene.
      * @param scene The scene to render.
      */
@@ -61,7 +99,7 @@ public class SimpleRayTracer extends RayTracerBase{
         for(LightSource lightSource : scene.lights) {
             Vector l=lightSource.getL(intersection.point);
             double nl=alignZero(n.dotProduct(l));
-            if (nl*nv>0){ // sign(nl)==sign(nv)
+            if (nl*nv>0 && unshaded(intersection,lightSource,l,n,nl)){ // sign(nl)==sign(nv)
                 Color iL=lightSource.getIntensity(intersection.point); // intensity of the light
                 color=color.add(calcDiffusive(material.kD, l, n, iL).add(calcSpecular(material.kS,l,n,v, material.nShininess, iL)));
             }

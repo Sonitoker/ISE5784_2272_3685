@@ -74,5 +74,9 @@ public class SpotLight extends PointLight{
         : (super.getIntensity(p).scale(Math.max(0, projection)));
     }
 
+    @Override
+    public double getDistance(Point point) {
+        return super.getDistance(point);
+    }
 
 }
