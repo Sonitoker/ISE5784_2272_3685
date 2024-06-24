@@ -71,8 +71,12 @@ public class Camera implements Cloneable {
     /**
      * Camera builder class
      * The builder constructs a camera with a location, a direction, and a size of the view plane.
+     *
      */
     public static class Builder {
+        /**
+         * The camera to build
+         */
         private final Camera camera = new Camera();
 
 
@@ -80,6 +84,7 @@ public class Camera implements Cloneable {
          * Set the location of the camera
          *
          * @param p0 the location of the camera
+         * @return the camera builder
          */
         public Builder setLocation(Point p0) {
             camera.p0 = p0;
@@ -91,6 +96,7 @@ public class Camera implements Cloneable {
          *
          * @param vTo the direction of the camera- the vector from the camera to the view plane
          * @param vUp the up direction of the camera- the vector from the camera to the top
+         * @return the camera builder
          */
         public Builder setDirection(Vector vTo, Vector vUp) {
             if (!isZero(vTo.dotProduct(vUp))) {
@@ -106,6 +112,7 @@ public class Camera implements Cloneable {
          *
          * @param width  the width of the view plane
          * @param height the height of the view plane
+         * @return the camera builder
          */
         public Builder setVpSize(double width, double height) {
             if (width <= 0 || height <= 0) {
@@ -120,6 +127,7 @@ public class Camera implements Cloneable {
          * Set the distance between the camera and the view plane
          *
          * @param distance the distance between the camera and the view plane
+         * @return the camera builder
          */
         public Builder setVpDistance(double distance) {
             if (distance <= 0) {
@@ -133,6 +141,7 @@ public class Camera implements Cloneable {
          * Set the image writer
          *
          * @param imageWriter the image writer
+         * @return the camera builder
          */
         public Builder setImageWriter(ImageWriter imageWriter) {
             camera.imageWriter = imageWriter;
@@ -143,6 +152,7 @@ public class Camera implements Cloneable {
          * Set the ray tracer
          *
          * @param rayTracer the ray tracer
+         * @return the camera builder
          */
         public Builder setRayTracer(RayTracerBase rayTracer) {
             camera.rayTracer = rayTracer;
@@ -235,6 +245,7 @@ public class Camera implements Cloneable {
     }
     /**
      * Render the image
+     * @return the camera
      */
     public Camera renderImage() {
 
@@ -267,6 +278,7 @@ public class Camera implements Cloneable {
      * Print a grid on the view plane
      * @param interval
      * @param color
+     * @return the camera
      */
         public Camera printGrid(int interval, Color color) {
             //=== running on the view plane===//

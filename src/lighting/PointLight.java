@@ -2,6 +2,7 @@ package lighting;
 
 import primitives.Color;
 import primitives.Point;
+import primitives.Util;
 import primitives.Vector;
 
 public class PointLight extends Light implements LightSource {
@@ -12,7 +13,7 @@ public class PointLight extends Light implements LightSource {
     /**
      * The constant attenuation coefficient.
      */
-    private double kC=1, kL=0, kQ=0;
+    private double kC=1d, kL=0d, kQ=0d;
 
 
     /**
@@ -59,8 +60,11 @@ public class PointLight extends Light implements LightSource {
         // The intensity of the color of the light
         // is proportional to squared distance
         double d = position.distance(p);
-        return intensity.reduce(kC + kL * d + kQ * d * d);
+        double factor = kC + kL * d + kQ * d * d;
+        if(Util.isZero(factor))
+            return intensity.scale(Double.POSITIVE_INFINITY);
 
+        return intensity.scale(1d/factor);
     }
 
     @Override

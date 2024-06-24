@@ -8,7 +8,7 @@ import primitives.Vector;
 public class SpotLight extends PointLight{
    /** vector representing the direction of the light source */
     private Vector direction;
-    double narrowBeam;
+    private double narrowBeam = 1d;
 
     /**
      * Constructs a SpotLight object with the given direction, intensity, and position.
@@ -20,31 +20,20 @@ public class SpotLight extends PointLight{
         super(intensity, position);
         this.direction = direction.normalize();
     }
-    /**
-     * Setter for kC- the constant attenuation coefficient.
-     * @param kC
-     * @return
-     */
+
+    @Override
     public SpotLight setKc(double kC) {
         super.setKc(kC) ;
         return this;
     }
 
-    /**
-     * Setter for kL- the linear attenuation coefficient.
-     * @param kL
-     * @return
-     */
+    @Override
     public SpotLight setKl(double kL) {
         super.setKl(kL);
         return this;
     }
 
-    /**
-     * Setter for kQ- the quadratic attenuation coefficient.
-     * @param kQ
-     * @return
-     */
+    @Override
     public SpotLight setKq(double kQ) {
         super.setKq(kQ);
         return this;
@@ -52,8 +41,8 @@ public class SpotLight extends PointLight{
 
     /**
      * Setter for the narrow beam of the light source.
-     * @param narrowBeam
-     * @return
+     * @param narrowBeam the narrow beam of the light
+     * @return the light source
      */
     public SpotLight setNarrowBeam(double narrowBeam) {
         this.narrowBeam = narrowBeam;
@@ -69,9 +58,9 @@ public class SpotLight extends PointLight{
             return Color.BLACK;
         }
         // The intensity of the color of the light
-        return  narrowBeam!=1
-        ?  super.getIntensity(p).scale(Math.pow(Math.max(0, projection), narrowBeam))
-        : (super.getIntensity(p).scale(Math.max(0, projection)));
+        return  narrowBeam!=1d
+        ?  super.getIntensity(p).scale(Math.pow(Math.max(0d, projection), narrowBeam))
+        : (super.getIntensity(p).scale(Math.max(0d, projection)));
     }
 
     @Override

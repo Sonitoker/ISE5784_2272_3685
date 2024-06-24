@@ -1,8 +1,25 @@
 package primitives;
 
+/**
+ * Class representing a material in a scene.
+ */
 public class Material {
+    /**
+     * The diffuse reflection coefficient and the specular reflection coefficient.
+     */
     public Double3 kD= Double3.ZERO, kS= Double3.ZERO;
+    /**
+     * The shininess coefficient.
+     */
     public int nShininess=0;
+    /**
+     * transparency attenuation coefficient
+     */
+    public Double3 kT= Double3.ZERO;
+    /**
+     * reflection attenuation coefficient
+     */
+    public Double3 kR= Double3.ZERO;
 
     /**
      * setter for kD- the diffuse reflection coefficient.
@@ -51,4 +68,42 @@ public class Material {
         this.nShininess = nShininess;
         return this;
     }
+    /**
+     * Setter for kT- the transparency attenuation coefficient.
+     * @param kT
+     * @return Material after setting kT
+     */
+    public Material setKt(Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
+    /**
+     * Setter for kT- the transparency attenuation coefficient.
+     * @param kT
+     * @return Material after setting kT
+     */
+    public Material setKt(double kT) {
+        this.kT = new Double3(kT);
+        return this;
+    }
+    /**
+     * Setter for kR- the reflection attenuation coefficient.
+     * @param kR
+     * @return Material after setting kR
+     */
+    public Material setKr(Double3 kR) {
+        this.kR = kR;
+        return this;
+    }
+    /**
+     * Setter for kR- the reflection attenuation coefficient.
+     * @param kR
+     * @return Material after setting kR
+     */
+    public Material setKr(double kR) {
+        this.kR = new Double3(kR);
+        return this;
+    }
+
+
 }

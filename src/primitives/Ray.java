@@ -9,8 +9,18 @@ import geometries.Intersectable.GeoPoint;
  * Represents a ray in three-dimensional space, defined by a starting point (head) and a direction.
  */
 public class Ray {
+    /**
+     * The head point of the ray
+     */
     final private  Point head;
+    /**
+     * The direction vector of the ray
+     */
     final private  Vector direction;
+    /**
+     * The delta value for comparing double values.
+     */
+    private static final double DELTA = 0.1;
 
     /**
      * Constructs a new Ray with the specified starting point and direction.
@@ -22,6 +32,28 @@ public class Ray {
         this.head = p;
         this.direction=vec.normalize();
     }
+
+    /**
+     * Constructs a new Ray with the specified starting point, direction, and normal vector.
+     *
+     * @param head      The starting point (head) of the ray.
+     * @param direction The direction vector of the ray.
+     * @param normal    The normal vector to the point on the intersected object.
+     */
+    public Ray(Point head, Vector direction, Vector normal) {
+        // If the normal vector and the direction vector are orthogonal, the head of the ray is the same as the head of the intersecting point
+        if(isZero(normal.dotProduct(direction)))  this.head = head;
+        // If the normal vector and the direction vector have the same sign, add +DELTA otherwise add -DELTA
+        else {
+            Vector delta = normal.scale(normal.dotProduct(direction) > 0 ? DELTA : -DELTA);
+
+            // Adding the DELTA to the head of the ray
+            this.head = head.add(delta);
+        }
+        // Normalize the direction vector of the ray
+        this.direction = direction.normalize();
+    }
+
 
     /**
      * Returns the head point of the ray.
