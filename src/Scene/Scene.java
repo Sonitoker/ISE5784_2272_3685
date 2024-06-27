@@ -86,20 +86,24 @@ public class Scene {
     }
 
     //bonus 5
+
+
     /**
      * reeads a scene from a file in JSON format.
+     *
      * @param filename The name of the file to read the scene from.
      * @return The scene object.
      */
     static public Scene readSceneFromFile(String filename) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Intersectable.class, new InterfaceAdapter());
-        Gson gson = gsonBuilder.create();
-        try {
-            return gson.fromJson(new FileReader(filename), Scene.class);
-        } catch (IOException e) {
-            throw new  RuntimeException(e);
-        }
+        Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Geometries.class, new InterfaceAdapter())
+                    .create();
+            try (JsonReader reader = new JsonReader(new FileReader(filename))) {
+                return gson.fromJson(reader, Scene.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
     }
 
     /**
@@ -107,14 +111,15 @@ public class Scene {
      *
      * @param filename The name of the file to write the scene to.
      */
-    public void writeSceneToFile(String filename) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Intersectable.class, new InterfaceAdapter());
-        Gson gson = gsonBuilder.create();
-        try {
-            gson.toJson(this, new FileWriter(filename));
+    public void writeSceneToFile(Scene scene, String filename) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Geometries.class, new InterfaceAdapter())
+                .setPrettyPrinting()
+                .create();
+        try (FileWriter writer = new FileWriter(filename)) {
+            gson.toJson(scene, writer);
         } catch (IOException e) {
-            throw new  RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
