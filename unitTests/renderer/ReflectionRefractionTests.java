@@ -3,7 +3,6 @@
  */
 package renderer;
 
-import static Scene.Scene.readSceneFromFile;
 import static java.awt.Color.*;
 
 import geometries.*;
@@ -103,19 +102,5 @@ public class ReflectionRefractionTests {
                 .renderImage()
                 .writeToImage();
     }
-    /** Produce a picture of a scene with a triangle, a transparent sphere, a reflective cylinder, and a polygon */
-    /** Produce a realistic picture with various geometries and effects */
-    @Test
-    public void realisticScene() {
 
-        Camera.Builder camera = Camera.getBuilder();
-        Scene scene = readSceneFromFile("sceneTrial.json");
-        camera.setImageWriter(new ImageWriter("realistic Scene", 1000, 1000))
-                .setRayTracer(new SimpleRayTracer(scene))
-                .build()
-                .renderImage()
-                .printGrid(100, new Color(YELLOW))
-                .writeToImage();
-
-    }
 }

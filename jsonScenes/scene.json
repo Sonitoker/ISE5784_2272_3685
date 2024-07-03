@@ -1,0 +1,87 @@
+{
+  "scene": {
+    "name": "cylinderWithLightsSkyAndSun",
+    "geometries": [
+      {
+        "cylinder": {
+          "radius": 50,
+          "axis": {
+            "origin": "0 -50 -200",
+            "direction": "0 1 0"
+          },
+          "height": 100
+        },
+        "material": {
+          "kd": 0.6,
+          "ks": 0.4,
+          "ns": 30,
+          "kr": 0.2,
+          "kt": 0.0
+        },
+        "emission": "139 69 19"
+      },
+      {
+        "plane": {
+          "point": "0 0 -500",
+          "normal": "0 0 1"
+        },
+        "material": {
+          "kd": 0.8,
+          "ks": 0.2,
+          "ns": 10,
+          "kr": 0.3,
+          "kt": 0.0
+        },
+        "emission": "135 206 235"
+      },
+      {
+        "sphere": {
+          "radius": 100,
+          "center": "0 300 -400"
+        },
+        "material": {
+          "kd": 1.0,
+          "ks": 0.0,
+          "ns": 0,
+          "kr": 0.0,
+          "kt": 0.0
+        },
+        "emission": "255 255 0"
+      }
+    ],
+    "lights": [
+      {
+        "point": {
+          "position": "50 100 -150",
+          "color": "255 240 200",
+          "kc": 1,
+          "kl": 0.001,
+          "kq": 0.0001
+        }
+      },
+      {
+        "spot": {
+          "position": "0 100 0",
+          "direction": "0 -1 -1",
+          "color": "255 255 255",
+          "kc": 1,
+          "kl": 0.0005,
+          "kq": 0.00001
+        }
+      },
+      {
+        "spot": {
+          "position": "0 300 -400",
+          "direction": "0 -1 0",
+          "color": "255 255 0",
+          "kc": 1,
+          "kl": 0.0005,
+          "kq": 0.00001
+        }
+      }
+    ],
+    "background": {
+      "color": "135 206 235"
+    }
+  }
+}

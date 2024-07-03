@@ -156,6 +156,18 @@ public class PolygonTests {
             intersections = polygon.findIntersections(ray7);
             assertNull(intersections, "Ray should not intersect the polygon on the edge's continuation");
         }
+
+        @Test
+        void testFindIntersectionsHelper(){
+            //TC01: point is after maxDis
+            Polygon polygon = new Polygon(new Point(0, 0, 0),
+                    new Point(1, 0, 0),
+                    new Point(1, 1, 0),
+                    new Point(0, 1, 0));
+            Ray ray = new Ray(new Point(0.5, 0.5, -1), new Vector(0, 0, 1).normalize());
+            assertNull(polygon.findGeoIntersectionsHelper(ray, 0.5), "Expected null");
+        }
+
     }
 
 

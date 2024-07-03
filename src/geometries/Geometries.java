@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static primitives.Util.alignZero;
+
 public class Geometries extends Intersectable{
 
 
@@ -21,7 +23,7 @@ public class Geometries extends Intersectable{
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         List<GeoPoint> result = null;
         for (Intersectable geometry : geometries) {
             if(geometry.findGeoIntersections(ray)!=null){
@@ -30,7 +32,11 @@ public class Geometries extends Intersectable{
                     if (result == null) {
                         result = new LinkedList<>();
                     }
-                    result.addAll(tempIntersections);
+                    for(GeoPoint geoPoint :tempIntersections) {
+                        if (alignZero(geoPoint.point.distance(ray.getHead()) - maxDistance) <= 0) {
+                            result.add(geoPoint);
+                        }
+                    }
                 }
             }
             }

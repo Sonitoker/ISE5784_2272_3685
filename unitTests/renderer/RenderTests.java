@@ -3,20 +3,23 @@ package renderer;
 
 
 
-import static Scene.Scene.readSceneFromFile;
+
 import static java.awt.Color.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import geometries.*;
+import lighting.DirectionalLight;
 import lighting.PointLight;
 import lighting.SpotLight;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
 import lighting.AmbientLight;
 import primitives.*;
 import Scene.Scene;
-
+import Scene.JsonScene;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -57,6 +60,7 @@ public class RenderTests {
                 .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
+
     }
 
     // For stage 6 - please disregard in stage 5
@@ -85,90 +89,182 @@ public class RenderTests {
                 .renderImage()
                 .printGrid(100, new Color(WHITE))
                 .writeToImage();
-
-
-        //scene.writeSceneToFile(scene,"scene.json");
-
     }
 
-    /** Test for json based scene - for bonus */
+    /** Test for json based scene - for bonus 5*/
     @Test
-    public void basicRenderJson() {
+    public void basicRenderJson()  {
+        assertDoesNotThrow(() -> {
+            Scene scene = JsonScene.importScene("JsonScenes/scene.json");
 
-
-
-            final Camera.Builder newCameraBuilder = Camera.getBuilder()
-                    .setDirection(new Vector(1, 0, 0), new Vector(0, 0, 1));
-
-            scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255).reduce(6), new Double3(0.15)));
-            scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(YELLOW), new Point(-300, 6, 10)));
-
-            double angle = 0;
-            double height = 0;
-
-            scene.geometries.add(new Plane(new Point(-4, 4, 0), new Vector(0, 0, 1))
-                    .setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(100).setKt(0.7).setKr(0.5)));
-
-            java.awt.Color[] colors = {MAGENTA, CYAN, GREEN, ORANGE};
-
-            for (int i = 25; i < 200; ++i) {
-                int colorIndex = i % colors.length;
-
-                scene.geometries
-                        .add(new Sphere(0.5, new Point(i / 25.0 * Math.cos(angle), i / 25.0 * Math.sin(angle), height))
-                                .setEmission(new Color(colors[colorIndex]).reduce(2.2))
-                                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
-
-                angle += Math.PI / 15.0;
-                height += 0.15;
-            }
-
-            java.awt.Color[] colors2 = {RED, YELLOW, CYAN, WHITE, GREEN, ORANGE};
-
-            height = 10;
-            for (int i = 25; i < 50; ++i) {
-                int colorIndex = i % colors2.length;
-
-                scene.geometries.add(new Sphere(0.3, new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
-                        .setEmission(new Color(colors2[colorIndex]).reduce(2.2))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
-
-                angle += Math.PI / 30.0;
-                height += 0.5;
-            }
-
-            height = 10;
-            for (int i = 25; i < 300; ++i) {
-
-                scene.geometries.add(new Sphere(0.05, new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
-                        .setEmission(new Color(GREEN))
-                        .setMaterial(new Material().setKd(1).setKs(1d).setShininess(100).setKt(1)));
-
-                angle += Math.PI / 60.0;
-                height += 0.1 % 50;
-            }
-
-            scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(255, 255, 255).reduce(2), new Point(-150, 0, 5)));
-            scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(RED).reduce(2), new Point(50, 0, 5)));
-
-            scene.setBackground(new Color(WHITE).reduce(TRANSLUCENT));
-
-            ImageWriter imageWriter = new ImageWriter("myNewShape", 500, 500);
-
-            newCameraBuilder.setLocation(new Point(-330, 0, 5))
-                    .setVpDistance(1000)
-                    .setVpSize(200, 200)
+            camera.setImageWriter(new ImageWriter("basicRenderJson", 1000, 1000))
                     .setRayTracer(new SimpleRayTracer(scene))
-                    .setImageWriter(imageWriter)
                     .build()
                     .renderImage()
                     .writeToImage();
-
-
-
+        });
     }
 
 
 
+    /**
+     * the bonus for stage 7, Produces a spectacular image with many bodies.
+     */
+    @Test
+    public void myShapeBonus() {
 
+        final Camera.Builder bonuscameraBuilder = Camera.getBuilder()
+                .setDirection(new Vector(1, 0, 0), new Vector(0, 0, 1));
+
+        scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255).reduce(6), new Double3(0.15)));
+        scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(GREEN), new Point(-300, 6, 10)));
+
+        double angle = 0;
+        double height = 0;
+
+        scene.geometries.add(new Plane(new Point(-4, 4, 0), new Vector(0, 0, 1))
+                .setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(100).setKt(0.7).setKr(0.5))
+                .setEmission(new Color(128, 128, 128)));  // Adding grey color to the plane
+
+// First series of spheres
+        java.awt.Color[] colors = {PINK, BLUE, GREEN, ORANGE};
+
+        for (int i = 25; i < 200; ++i) {
+            int colorIndex = i % colors.length;
+
+            scene.geometries
+                    .add(new Sphere(0.5, new Point(i / 25.0 * Math.cos(angle), i / 25.0 * Math.sin(angle), height))
+                            .setEmission(new Color(colors[colorIndex]).reduce(2.2))
+                            .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
+
+            angle += Math.PI / 15.0;
+            height += 0.15;
+        }
+
+// Second series of spheres with different colors
+        java.awt.Color[] colors2 = {CYAN, MAGENTA, YELLOW, DARK_GRAY, RED, LIGHT_GRAY};
+
+        height = 10;
+        for (int i = 25; i < 100; ++i) {
+            int colorIndex = i % colors2.length;
+
+            scene.geometries.add(new Sphere(0.3, new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
+                    .setEmission(new Color(colors2[colorIndex]).reduce(2.2))
+                    .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
+
+            angle += Math.PI / 30.0;
+            height += 0.5;
+        }
+
+// Third series of spheres with another set of colors
+        java.awt.Color[] colors3 = {GREEN, ORANGE, PINK, YELLOW, BLUE, RED};
+
+        height = 20;
+        for (int i = 25; i < 150; ++i) {
+            int colorIndex = i % colors3.length;
+
+            scene.geometries.add(new Sphere(0.4, new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
+                    .setEmission(new Color(colors3[colorIndex]).reduce(2.2))
+                    .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
+
+            angle += Math.PI / 25.0;
+            height += 0.3;
+        }
+
+// Fourth series of spheres with another set of colors
+        height = 30;
+        for (int i = 25; i < 300; ++i) {
+
+            scene.geometries.add(new Sphere(0.05, new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
+                    .setEmission(new Color(WHITE))
+                    .setMaterial(new Material().setKd(1).setKs(1d).setShininess(100).setKt(1)));
+
+            angle += Math.PI / 60.0;
+            height += 0.1 % 50;
+        }
+
+        scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(255, 255, 255).reduce(2), new Point(-150, 0, 5)));
+        scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(BLUE).reduce(2), new Point(50, 0, 5)));
+
+        scene.setBackground(new Color(CYAN));
+
+        ImageWriter imageWriter = new ImageWriter("myShapeBonus", 500, 500);
+
+        bonuscameraBuilder.setLocation(new Point(-330, 0, 5))
+                .setVpDistance(1000)
+                .setVpSize(200, 200)
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setImageWriter(imageWriter)
+                .build()
+                .renderImage()
+                .writeToImage();
+
+//        final Camera.Builder bonuscameraBuilder = Camera.getBuilder()
+//                .setDirection(new Vector(1, 0, 0), new Vector(0, 0, 1));
+//
+//        scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255).reduce(6), new Double3(0.15)));
+//        scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(RED), new Point(-300, 6, 10)));
+//
+//        double angle = 0;
+//        double height = 0;
+//
+//        scene.geometries.add(new Plane(new Point(-4, 4, 0), new Vector(0, 0, 1))
+//                .setMaterial(new Material().setKd(0.8).setKs(0.6).setShininess(100).setKt(0.7).setKr(0.5)));
+//
+//        java.awt.Color[] colors = {YELLOW, RED, ORANGE, BLUE};
+//
+//        for (int i = 25; i < 200; ++i) {
+//            int colorIndex = i % colors.length;
+//
+//            scene.geometries
+//                    .add(new Sphere(0.5, new Point(i / 25.0 * Math.cos(angle), i / 25.0 * Math.sin(angle), height))
+//                            .setEmission(new Color(colors[colorIndex]).reduce(2.2))
+//                            .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
+//
+//            angle += Math.PI / 15.0;
+//            height += 0.15;
+//        }
+//
+//        java.awt.Color[] colors2 = {BLUE, GREEN, PINK, BLACK, RED, GRAY};
+//
+//        height = 10;
+//        for (int i = 25; i < 100; ++i) {
+//            int colorIndex = i % colors2.length;
+//
+//            scene.geometries.add(new Sphere(0.3,new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
+//                    .setEmission(new Color(colors2[colorIndex]).reduce(2.2))
+//                    .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(80).setKt(0.3)));
+//
+//            angle += Math.PI / 30.0;
+//            height += 0.5;
+//        }
+//
+//        height = 10;
+//        for (int i = 25; i < 300; ++i) {
+//
+//            scene.geometries.add(new Sphere(0.05, new Point(i / 25.0 * Math.cos(angle), i * Math.sin(angle), height))
+//                    .setEmission(new Color(WHITE))
+//                    .setMaterial(new Material().setKd(1).setKs(1d).setShininess(100).setKt(1)));
+//
+//            angle += Math.PI / 60.0;
+//            height += 0.1 % 50;
+//        }
+//
+//        scene.lights.add(new SpotLight( new Vector(1, 0, 0),new Color(255, 255, 255).reduce(2), new Point(-150, 0, 5)));
+//        scene.lights.add(new SpotLight(new Vector(1, 0, 0),new Color(GREEN).reduce(2), new Point(50, 0, 5)));
+//
+//        scene.setBackground(new Color(BLUE).reduce(TRANSLUCENT));
+//
+//        ImageWriter imageWriter = new ImageWriter("myShapeBonus", 500, 500);
+//
+//        bonuscameraBuilder.setLocation(new Point(-330, 0, 5))
+//                .setVpDistance(1000)
+//                .setVpSize(200, 200)
+//                .setRayTracer(new SimpleRayTracer(scene))
+//                .setImageWriter(imageWriter)
+//                .build()
+//                .renderImage()
+//                .writeToImage();
+//    }
+    }
 }

@@ -180,6 +180,30 @@ class CylinderTests {
         assertNull(cylinder2.findIntersections(new Ray(new Point(0, 2, -1), new Vector(0, 0, 1))),
                 "Ray's line out of cylinder");
     }
+    @Test
+    void testFindIntersectionsHelper(){
+        Cylinder cylinder = new Cylinder(1, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 2);
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray's line is outside the cylinder (0 points)
+        assertNull(cylinder.findIntersections(new Ray(new Point(0, 0, 2), new Vector(0, 0, 1))),
+                "Ray's line out of cylinder");
+
+        // TC02: Ray starts before and crosses the cylinder (2 points)
+        List<Point> result = cylinder.findIntersections(new Ray(new Point(0, 0, -1), new Vector(0, 0, 1)));
+        assertEquals(2, result.size(), "Wrong number of points");
+
+        // TC03: Ray starts inside the cylinder (1 point)
+        result = cylinder.findIntersections(new Ray(new Point(0, 0, 1), new Vector(0, 0, 1)));
+        assertEquals(1, result.size(), "Wrong number of points");
+
+        // TC04: Ray starts after the cylinder (0 points)
+        assertNull(cylinder.findIntersections(new Ray(new Point(0, 0, 3), new Vector(0, 0, 1))),
+                "Ray's line out of cylinder");
+
+        // TC05: Ray starts at the cylinder and goes outside (0 points)
+        assertNull(cylinder.findIntersections(new Ray(new Point(0, 0, 0), new Vector(0, 0, -1))),
+                "Ray's line out of cylinder");
+    }
 
 }
 

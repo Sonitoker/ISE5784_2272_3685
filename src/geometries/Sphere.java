@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+
 /**
  * The Sphere class represents a sphere geometry in three-dimensional space.
  * A sphere is defined by its radius and center point.
@@ -40,7 +42,7 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         Point P0 = ray.getHead(); // ray's starting point
         Point O = center; //the sphere's center point
         Vector V = ray.getDir(); // "the v vector" from the presentation
@@ -56,14 +58,14 @@ public class Sphere extends RadialGeometry {
         double th = Math.sqrt(radius * radius - d * d);
         double t1 = tm - th;
         double t2 = tm + th;
-        if (t1 > 0 && t2 > 0) {
+        if (t1 > 0 && t2 > 0 && alignZero(t1 - maxDistance) <= 0 && alignZero(t2 - maxDistance) <= 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
             return List.of(new GeoPoint(this,p1), new GeoPoint(this,p2));
-        } else if (t1 > 0) {
+        } else if (t1 > 0 && alignZero(t1 - maxDistance) <= 0) {
             Point p1 = ray.getPoint(t1);
             return List.of(new GeoPoint(this,p1));
-        } else if (t2 > 0) {
+        } else if (t2 > 0 && alignZero(t2 - maxDistance) <= 0) {
             Point p2 = ray.getPoint(t2);
             return List.of(new GeoPoint(this,p2));
         }

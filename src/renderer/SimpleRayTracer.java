@@ -44,21 +44,16 @@ public class SimpleRayTracer extends RayTracerBase{
 
         // Check if there is any intersection between the object
         // from the intersection point to the light source
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(geoPoint.point));
         // If no intersection the object is translucent (attenuation factor equal to 1)
         if (intersections == null) return Double3.ONE;
 
-        // Calculate the distance from the light source to the intersection point
-        double lightDistance = light.getDistance(geoPoint.point);
         // Initiate the transparency to 1 (the object is translucent)
         Double3 ktr = Double3.ONE;
 
         // For each intersection point with the geometries check if have an intersection
         // between the intersection point to the light source
         for (GeoPoint gp : intersections) {
-            // if there is an intersection point between the intersection point and the light source
-            if (alignZero(gp.point.distance(geoPoint.point) - lightDistance) <= 0)
-                // The intensity of the light is attenuate by the transparency attenuation factor
                 ktr = ktr.product(gp.geometry.getMaterial().kT);
             // If the intensity of the light ray is too small, the object is opaque
             if (ktr.lowerThan(MIN_CALC_COLOR_K)) return Double3.ZERO;

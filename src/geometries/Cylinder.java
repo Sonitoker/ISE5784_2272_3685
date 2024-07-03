@@ -1,5 +1,6 @@
 package geometries;
 
+import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -8,6 +9,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -58,70 +62,76 @@ public class Cylinder extends Tube{
         }
 
         // The point is on the lateral surface
-        Point o = p0.add(dir.scale(t));
+        Point o = axis.getPoint(t);
         return p.subtract(o).normalize();
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         // Initialize intersections list
-        List<GeoPoint> intersections = new LinkedList<>();
+        List<Point> intersections = new LinkedList<>();
 
         // Find intersections with the infinite cylinder
         Tube tube = new Tube(radius, axis);
-        List<GeoPoint> infiniteCylinderIntersections = tube.findGeoIntersections(ray);
+        List<Point> infiniteCylinderIntersections = tube.findIntersections(ray);
         if (infiniteCylinderIntersections != null) {
             intersections.addAll(infiniteCylinderIntersections);
         }
 
         // Remove intersections outside the cylinder height
-        Iterator<GeoPoint> iterator = intersections.iterator();
+        Iterator<Point> iterator = intersections.iterator();
         while (iterator.hasNext()) {
-            GeoPoint intersection = iterator.next();
-            double t = axis.getDir().dotProduct(intersection.point.subtract(axis.getPoint(0)));
-            if (t <= 0 || t >= height) {
+            Point intersection = iterator.next();
+            double t = axis.getDir().dotProduct(intersection.subtract(axis.getPoint(0d)));
+            if (t <= 0d || t >= height || alignZero(intersection.distance(ray.getPoint(0)) - maxDistance) > 0d) {
                 iterator.remove();
             }
         }
 
         // Define planes for the bottom and top bases
-        Plane bottomBase = new Plane(axis.getPoint(0), axis.getDir());
+        Plane bottomBase = new Plane(axis.getPoint(0d), axis.getDir());
         Plane topBase = new Plane(axis.getPoint(height), axis.getDir());
 
         // Return intersections if there are exactly 2 (so they are on the sides of the cylinder)
-        if(intersections.size() == 2)
-            return intersections;
+        if (intersections.size() == 2) {
+            return List.of(new GeoPoint(this, intersections.get(0)), new GeoPoint(this, intersections.get(1)));
+        }
+
 
         // Find intersections with the bottom base
         List<Point> bottomBaseIntersections = bottomBase.findIntersections(ray);
-        if (bottomBaseIntersections != null) {
+        if (bottomBaseIntersections != null && alignZero(bottomBaseIntersections.getFirst().distanceSquared(ray.getPoint(0)) - maxDistance) <= 0d) {
             Point intersection = bottomBaseIntersections.getFirst();
-            if (axis.getPoint(0).distanceSquared(intersection) <= radius * radius) {
-                intersections.add(new GeoPoint(this,intersection));
+            if (axis.getPoint(0d).distanceSquared(intersection) <= radius * radius) {
+                intersections.add(intersection);
             }
         }
 
         // Find intersections with the top base
         List<Point> topBaseIntersections = topBase.findIntersections(ray);
-        if (topBaseIntersections != null) {
+        if (topBaseIntersections != null && alignZero(topBaseIntersections.getFirst().distanceSquared(ray.getPoint(0)) - maxDistance) <= 0d) {
             Point intersection = topBaseIntersections.getFirst();
             if (axis.getPoint(height).distanceSquared(intersection) <= radius * radius) {
-                intersections.add(new GeoPoint(this,intersection));
+                intersections.add(intersection);
             }
         }
 
-        // if the ray is tangent to the cylinder- it means no intersections
-        if(intersections.size() == 2 && axis.getPoint(0).distanceSquared(intersections.get(0).point) == radius* radius &&
-                axis.getPoint(height).distanceSquared(intersections.get(1).point) == radius * radius){
-            Vector v = intersections.get(1).point.subtract(intersections.get(0).point);
-            if(v.normalize().equals(axis.getDir()) || v.normalize().equals(axis.getDir().scale(-1)))
+        // if the ray is tangent to the cylinder
+        if (intersections.size() == 2 && axis.getPoint(0).distanceSquared(intersections.get(0)) == radius * radius &&
+                axis.getPoint(height).distanceSquared(intersections.get(1)) == radius * radius) {
+            Vector v = intersections.get(1).subtract(intersections.get(0));
+            if (v.normalize().equals(axis.getDir()) || v.normalize().equals(axis.getDir().scale(-1d)))
                 return null;
         }
 
         // Return null if no valid intersections found
-        return intersections.isEmpty() ? null : intersections;
-    }
+        List<GeoPoint> geoPoints = new LinkedList<>();
+        for (Point p : intersections) {
+            geoPoints.add(new GeoPoint(this, p));
+        }
 
+        return geoPoints.isEmpty() ? null : geoPoints;
+    }
 
 
 

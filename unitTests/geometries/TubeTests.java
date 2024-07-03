@@ -73,6 +73,7 @@ class TubeTests {
 
     }
 
+
     /** Test method for
      * {@link geometries.Tube#findIntersections(primitives.Ray)}. */
     @Test
@@ -465,4 +466,16 @@ class TubeTests {
         assertNull(result, BAD_INTERSECTIONS);
 
     }
+
+    @Test
+    void testFindIntersectionsHelper(){
+        Tube tube = new Tube(1, new Ray(new Point(1, 0, 0), new Vector(0, 1, 0)));
+        Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 1, 0));
+        List<Intersectable.GeoPoint> result = tube.findGeoIntersectionsHelper(ray, 1);
+        //TC01: point intersection is after ma
+        ray = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0));
+        result = tube.findGeoIntersectionsHelper(ray, 0);
+        assertNull(result, "point intersection is after max distance");
+    }
+
 }

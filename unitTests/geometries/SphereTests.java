@@ -149,4 +149,24 @@ public class SphereTests {
                         new Vector(0, 0, 1))),
                 "Ray starts after the tangent point");
     }
+
+   @Test
+    void tastFindIntersectionsHelper(){
+        Sphere sphere = new Sphere(1d, p100);
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray's line is outside the sphere (0 points)
+        assertNull(sphere.findGeoIntersectionsHelper(new Ray(p001, new Vector(1, 1, 0)), 1),
+                "Ray's line out of sphere");
+        // TC02: Ray starts after the sphere (0 points)
+        assertNull(sphere.findGeoIntersectionsHelper(new Ray(new Point(3, 0, 0),
+                        new Vector(1, 1, 0)), 1),
+                "Ray's line out of sphere");
+
+        // =============== Boundary Values Tests ==================
+        // **** Group: Ray's line crosses the sphere (but not the center)
+        // TC11: intersection point after max distance
+        assertNull(sphere.findGeoIntersectionsHelper(new Ray(p001, new Vector(3, 1, 0)), 0.5),
+                "Ray's line out of sphere");
+   }
+
 }

@@ -74,7 +74,7 @@ public class Plane extends  Geometry {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
 
         if (q.equals(ray.getHead())) { // if the ray starts from the plane it doesn't cut the plane at all
             return null;
@@ -83,8 +83,9 @@ public class Plane extends  Geometry {
         if (isZero(nv)) {
             return null;
         }
+        // t = (q - p0) * n / nv calculate the distance from the ray's head to the intersection point
         double t = alignZero(normal.dotProduct(q.subtract(ray.getHead())) / nv);
-        if (t > 0) {
+        if (t > 0 && alignZero(t - maxDistance) <= 0) {
             return List.of(new GeoPoint(this,ray.getPoint(t)));
         } else {
             return null;

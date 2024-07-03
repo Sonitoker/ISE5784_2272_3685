@@ -1,11 +1,14 @@
 package geometries;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
 
 /**
@@ -96,11 +99,11 @@ public class Polygon extends  Geometry {
 
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         //check if the ray intersects the plane of the polygon- the polygon is on a plane
         Plane plane = new Plane(vertices.get(0), vertices.get(1), vertices.get(2));
         List<Point> intersections = plane.findIntersections(ray);
-        if (intersections == null) {
+        if (intersections == null || alignZero(intersections.get(0).distanceSquared(ray.getPoint(0d)) - maxDistance) > 0d){
             return null;
         }
 
@@ -109,12 +112,17 @@ public class Polygon extends  Geometry {
 
         // Check if the intersection point is inside the polygon
         Point p = intersections.get(0);
-        int numVertices = vertices.size();
         for (Point vi : vertices) {
             int nextIndex = (vertices.indexOf(vi) + 1) % vertices.size();
             Point vi1 = vertices.get(nextIndex);
             Vector edge = vi1.subtract(vi);
             Vector vp = p.subtract(vi);
+            try {
+                Vector crossProduct = edge.crossProduct(vp);
+            }
+            catch (IllegalArgumentException e){
+                return null;
+            }
             Vector crossProduct = edge.crossProduct(vp);
             double dotProduct = v.dotProduct(crossProduct);    //if the point is outside the polygon
             if (dotProduct < 0) {

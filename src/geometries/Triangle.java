@@ -21,7 +21,7 @@ public class Triangle extends Polygon {
 
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
 
         // Find the intersection point with the plane of the triangle
         Point p1 = vertices.get(0);
@@ -52,7 +52,10 @@ public class Triangle extends Polygon {
         }
         // Check if the intersection point is inside the triangle
         if (isPointInTriangle(intersectionPoint, p1, p2, p3)) {
-            return List.of(new GeoPoint(this,intersectionPoint));
+            if(alignZero(t - maxDistance) <= 0){
+                return List.of(new GeoPoint(this,intersectionPoint));
+            }
+
         }
 
         return null;

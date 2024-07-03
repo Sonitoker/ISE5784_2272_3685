@@ -54,4 +54,48 @@ class TriangleTest {
                         new Vector(-1, 0.1, 0))),
                 "The point is not on edge's continuation");
     }
+
+    @Test
+    void testFindGeoIntersectionsHelper() {
+        Triangle triangle = new Triangle(new Point(0, 1, 0),
+                new Point(0, 5, 0),
+                new Point(0, 3, 5));
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: The intersection point is in the triangle
+        assertEquals(List.of(new Intersectable.GeoPoint(triangle, new Point(0, 3, 1))),
+                triangle.findGeoIntersections(new Ray(new Point(1, 3, 0),
+                        new Vector(-1, 0, 1))),
+                "The point is not in the triangle");
+
+        // TC02: The intersection point is outside the triangle, against edge
+        assertNull(triangle.findGeoIntersections(new Ray(p100,
+                        new Vector(-1, 0, 1))),
+                "The point is not outside the triangle, against edge");
+
+        // TC03: The intersection point is outside the triangle, against vertex
+        assertNull(triangle.findGeoIntersections(new Ray(p100,
+                        new Vector(-1, 0.1, -0.1))),
+                "The point is not outside the triangle, against vertex");
+
+        // =============== Boundary Values Tests ==================
+        // TC10: The point is on edge
+        assertNull(triangle.findGeoIntersections(new Ray(new Point(1, 3, 0),
+                        new Vector(-1, 0, 0))),
+                "The point is not on edge");
+
+        // TC11: The point is in vertex
+        assertNull(triangle.findGeoIntersections(new Ray(new Point(1, 1, 0),
+                        new Vector(-1, 0, 0))),
+                "The point is not in vertex");
+
+        // TC12: The point is on edge's continuation
+        assertNull(triangle.findGeoIntersections(new Ray(p100,
+                        new Vector(-1, 0.1, 0))),
+                "The point is not on edge's continuation");
+        //TC13:the intersecton point is after the max distance
+        assertNull(triangle.findGeoIntersections(new Ray(new Point(1, 3, 0),
+                        new Vector(-1, 0, 1)), 1),
+                "The point is not after the max distance");
+    }
 }

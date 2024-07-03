@@ -133,6 +133,59 @@ class PlaneTests {
         assertNull(plane.findIntersections(new Ray(new Point(1,0,1), new Vector(2,3,5))),
                 "Does not return null- when ray begins in the same point which appears as reference point in the plane");
     }
+
+    @Test
+    void testFindIntersectionsHelper(){
+        Plane plane = new Plane(new Point(1,0,1),
+                new Point(0,1,1),
+                new Point(1,1,1));
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray intersects the plane
+        assertEquals(List.of(new Intersectable.GeoPoint(plane, new Point(1,0.5,1))),
+                plane.findGeoIntersections(new Ray(new Point(0,0.5,0),
+                        new Vector(1,0,1))),
+                "Ray does not intersects the plane");
+
+        // TC02: Ray does not intersect the plane
+        assertNull(plane.findGeoIntersections(new Ray(new Point(1,0.5,2),
+                        new Vector(1,2,5))),
+                "Ray intersects the plane");
+
+        // =============== Boundary Values Tests ==================
+
+        // **** Group: Ray is parallel to the plane
+        // TC10: The ray included in the plane
+        assertNull(plane.findGeoIntersections(new Ray(new Point(1,2,1), new Vector(1,0,0)),
+                1),
+                "Does not return null- when ray included in the plane");
+
+        // TC11: The ray not included in the plane
+        assertNull(plane.findGeoIntersections(new Ray(new Point(1,2,2),
+                        new Vector(1,0,0)),
+                1),
+                "Does not return null- when ray not included in the plane");
+
+        // **** Group: Ray is orthogonal to the plane
+        // TC12: before the plane
+        assertEquals(List.of(new Intersectable.GeoPoint(plane, new Point(1,1,1))),
+                plane.findGeoIntersections(new Ray(new Point(1,1,0),
+                        new Vector(0,0,1)),
+                1),
+                "Ray is orthogonal to the plane, before the plane");
+
+        // TC13: on the plane
+        assertNull(plane.findGeoIntersections(new Ray(new Point(1,2,1),
+                        new Vector(0,0,1)),
+                1),
+                "Does not return null- when ray is orthogonal to the plane, on the plane");
+
+        // TC14: after the plane
+        assertNull(plane.findGeoIntersections(new Ray(new Point(1,2,2),
+                        new Vector(0,0,1)),
+                1),
+                "Does not return null- when ray is orthogonal to the plane");
+
+    }
 }
 
 
