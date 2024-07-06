@@ -1,12 +1,6 @@
 package renderer;
-
-
-
-
-
 import static java.awt.Color.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import geometries.*;
@@ -15,7 +9,6 @@ import lighting.PointLight;
 import lighting.SpotLight;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
-
 import lighting.AmbientLight;
 import primitives.*;
 import Scene.Scene;
@@ -94,16 +87,23 @@ public class RenderTests {
     /** Test for json based scene - for bonus 5*/
     @Test
     public void basicRenderJson()  {
+        final Camera.Builder camera1 = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(new Point(0,10,0))
+                .setDirection(new Vector(0, 0, -1), new Vector(0,1,0))
+                .setVpDistance(130)
+                .setVpSize(280, 280);
         assertDoesNotThrow(() -> {
-            Scene scene = JsonScene.importScene("JsonScenes/scene.json");
+            Scene scene = JsonScene.importScene("JsonScenes/sceneTrial.json");
 
-            camera.setImageWriter(new ImageWriter("basicRenderJson", 1000, 1000))
+            camera1.setImageWriter(new ImageWriter("basicRenderJson", 1000, 1000))
                     .setRayTracer(new SimpleRayTracer(scene))
                     .build()
                     .renderImage()
                     .writeToImage();
         });
     }
+
 
 
 
