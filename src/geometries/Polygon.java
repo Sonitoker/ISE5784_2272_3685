@@ -96,71 +96,47 @@ public class Polygon extends  Geometry {
         return plane.getNormal();
     }
 
-
-//TODO: fix the following implementation to handle maxDistance correctly
-
-    //    // Check if the ray intersects the plane of the polygon
-//    List<Point> intersections = plane.findIntersections(ray);
-//        if (intersections == null) {
-//        return null;
-//    }
-//
-//    Point intersection = intersections.getFirst();
-//        if (alignZero(intersection.distanceSquared(ray.getHead()) - maxDistance * maxDistance) > 0d) {
-//        return null;
-//    }
-//
-//    Vector v = ray.getDir();
-//
-//    // Check if the intersection point is inside the polygon
-//        for (int i = 0; i < vertices.size(); i++) {
-//        Point vi = vertices.get(i);
-//        Point vi1 = vertices.get((i + 1) % vertices.size());
-//        Vector edge = vi1.subtract(vi);
-//        Vector vp = intersection.subtract(vi);
-//
-//        if (Util.isZero(edge.dotProduct(vp)) || v.dotProduct(edge.crossProduct(vp)) < 0) {
-//            return null;
-//        }
-//    }
-//
-//    // If all dot products are positive, the point is inside the polygon
-//        return List.of(new GeoPoint(this, intersection));
-//}
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
-        // Find and return the intersection points of the ray with the plane
-        List<Point> points = plane.findIntersections(ray);
+        //Finding an intersection with the plane of the Polygon
+        List<GeoPoint> intersectionWithPlane =  this.plane.findGeoIntersections(ray, maxDistance);
 
-        // If the ray does not intersect the plane or the intersection point is too far, return null
-        if (points == null || alignZero(points.getFirst().distanceSquared(ray.getHead()) - maxDistance * maxDistance) > 0d) return null;
+        if(intersectionWithPlane == null)
+            return null;
 
-        // Initialize a list to hold the normals of the edges of the polygonal base
-        List<Vector> normals = new LinkedList<>();
-
-        // Get the starting point and direction of the ray
-        final Point startPoint = ray.getHead();
-        final Vector dir = ray.getDir();
-
-        // Calculate the normal vector for each edge of the polygonal base
-        Vector v1 = vertices.getFirst().subtract(startPoint);
-        for (Point p : vertices.subList(1, size)) {
-            Vector v2 = p.subtract(startPoint);
-            normals.add(v1.crossProduct(v2).normalize());
-            v1 = v2;
+        List<Vector> vectors = new LinkedList<>();
+        for (Point p : vertices) {
+            vectors.add(p.subtract(ray.getHead()));
         }
-        // Add the normal for the edge connecting the last vertex to the first vertex
-        normals.add(vertices.getLast().subtract(startPoint).crossProduct(vertices.getFirst().subtract(startPoint)).normalize());
 
-        // Determine if the ray direction is consistently on one side of all the polygon's edges
-        boolean allPositive = dir.dotProduct(normals.getFirst()) > 0d;
-        for (Vector normal : normals) {
-            double s = dir.dotProduct(normal);
-            // If the dot product is zero or if it changes sign, the ray does not intersect the polygon's base
-            if (Util.isZero(s) || (Util.alignZero(s) > 0d != allPositive)) {
+        List<Vector> normals = new LinkedList<>();
+        Vector v1, v2;
+        for (int i = 0; i < vectors.size(); i++) {
+            v1 = vectors.get(i);
+            v2 = i != vectors.size() - 1 ? vectors.get(i + 1) : vectors.getFirst();
+
+            normals.add(v1.crossProduct(v2).normalize());
+        }
+
+        List<Double> scalars = new LinkedList<>();
+        for (Vector n : normals) {
+            scalars.add(alignZero(ray.getDir().dotProduct(n)));
+        }
+
+        //If one of the scalar products is zero - no cutting
+        if(scalars.contains(0))
+            return null;
+
+        //If all the scalar lines have the same sign - then the intersection with the plane cuts the triangle
+        int sign = (scalars.getFirst() > 0) ? 1 : -1;
+        for (Double s : scalars) {
+            int currentSign = (s > 0) ? 1 : -1;
+            if (currentSign != sign) {
                 return null;
             }
         }
-        return List.of(new GeoPoint(this, points.getFirst()));
+        return  List.of(new GeoPoint(this, intersectionWithPlane.getFirst().point));
     }
 }
+
+
