@@ -1,69 +1,56 @@
 package geometries;
 
-import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
 /**
- * Represents a cylinder in 3D space, extending from a given axis with a certain radius and height.
- * Inherits from the Tube class.
+ * Class Cylinder is the basic class representing a cylinder in the 3D space.
  */
-public class Cylinder extends Tube{
-
-    private double height; // The height of the cylinder
+public class Cylinder extends Tube {
+    private final double height;
 
     /**
-     * Constructs a cylinder with the given radius, axis, and height.
-     * @param radius The radius of the cylinder.
-     * @param axis The axis of the cylinder.
-     * @param height The height of the cylinder.
+     * Constructor for a Cylinder object receiving a Ray, a radius and a height.
+     *
+     * @param axis   the axis of the cylinder
+     * @param radius the radius of the cylinder
+     * @param height the height of the cylinder
      */
-    public Cylinder(double radius, Ray axis, double height) {
-        super(radius,axis);
-        this.height=height;
+    public Cylinder(Ray axis, double radius, double height) {
+        super(radius, axis);
+        this.height = height;
     }
 
-    /**
-     * Computes and returns the normal vector to the cylinder at a given point.
-     * @param p The point at which to compute the normal vector.
-     * @return The normal vector to the cylinder at the given point.
-     */
-    public Vector getNormal(Point p){
+    @Override
+    public Vector getNormal(Point point) {
         Point p0 = axis.getHead();
-        Vector dir = axis.getDir();
+        Vector dir = this.axis.getDir();
 
-        // Vector from the base point to the given point
-        if(p.equals(p0))
-            return dir.scale(-1).normalize();
+        //  If p0 is the head of the axis
+        if (point.equals(p0))
+            return dir.scale(-1);
 
-        Vector vectorFromP0 = p.subtract(p0);
+        // If p1 is the end of the axis
+        if (point.equals(axis.getPoint(height)))
+            return dir;
 
-        // Project the point onto the cylinder's axis
-        double t = dir.dotProduct(vectorFromP0);
+        // If the point is on the top or bottom surface of the cylinder
+        if (Util.isZero(p0.subtract(point).dotProduct(dir)))
+            return dir.scale(-1d);
 
-        // Check if the point is on the bottom base
-        if (t <= 0) {
-            return dir.scale(-1).normalize(); // normal is the opposite direction of the cylinder's axis direction
-        }
+        if (Util.isZero(axis.getPoint(height).subtract(point).dotProduct(dir)))
+            return dir;
 
-        // Check if the point is on the top base
-        if (t >= height) {
-            return dir.normalize(); // normal is the direction of the cylinder's axis direction
-        }
-
-        // The point is on the lateral surface
-        Point o = axis.getPoint(t);
-        return p.subtract(o).normalize();
+        // Otherwise, call the superclass method
+        return super.getNormal(point);
     }
 
     @Override
@@ -83,7 +70,7 @@ public class Cylinder extends Tube{
         while (iterator.hasNext()) {
             Point intersection = iterator.next();
             double t = axis.getDir().dotProduct(intersection.subtract(axis.getPoint(0d)));
-            if (t <= 0d || t >= height || alignZero(intersection.distance(ray.getPoint(0)) - maxDistance) > 0d) {
+            if (t <= 0d || t >= height || alignZero(intersection.distance(ray.getHead()) - maxDistance) > 0d) {
                 iterator.remove();
             }
         }
@@ -100,7 +87,7 @@ public class Cylinder extends Tube{
 
         // Find intersections with the bottom base
         List<Point> bottomBaseIntersections = bottomBase.findIntersections(ray);
-        if (bottomBaseIntersections != null && alignZero(bottomBaseIntersections.getFirst().distanceSquared(ray.getPoint(0)) - maxDistance) <= 0d) {
+        if (bottomBaseIntersections != null && alignZero(bottomBaseIntersections.getFirst().distanceSquared(ray.getHead()) - maxDistance) <= 0d) {
             Point intersection = bottomBaseIntersections.getFirst();
             if (axis.getPoint(0d).distanceSquared(intersection) <= radius * radius) {
                 intersections.add(intersection);
@@ -109,7 +96,7 @@ public class Cylinder extends Tube{
 
         // Find intersections with the top base
         List<Point> topBaseIntersections = topBase.findIntersections(ray);
-        if (topBaseIntersections != null && alignZero(topBaseIntersections.getFirst().distanceSquared(ray.getPoint(0)) - maxDistance) <= 0d) {
+        if (topBaseIntersections != null && alignZero(topBaseIntersections.getFirst().distanceSquared(ray.getHead()) - maxDistance) <= 0d) {
             Point intersection = topBaseIntersections.getFirst();
             if (axis.getPoint(height).distanceSquared(intersection) <= radius * radius) {
                 intersections.add(intersection);
@@ -117,7 +104,7 @@ public class Cylinder extends Tube{
         }
 
         // if the ray is tangent to the cylinder
-        if (intersections.size() == 2 && axis.getPoint(0).distanceSquared(intersections.get(0)) == radius * radius &&
+        if (intersections.size() == 2 && axis.getHead().distanceSquared(intersections.get(0)) == radius * radius &&
                 axis.getPoint(height).distanceSquared(intersections.get(1)) == radius * radius) {
             Vector v = intersections.get(1).subtract(intersections.get(0));
             if (v.normalize().equals(axis.getDir()) || v.normalize().equals(axis.getDir().scale(-1d)))
@@ -132,7 +119,4 @@ public class Cylinder extends Tube{
 
         return geoPoints.isEmpty() ? null : geoPoints;
     }
-
-
-
 }

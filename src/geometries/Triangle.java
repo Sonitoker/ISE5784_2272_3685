@@ -2,38 +2,38 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
 
 import java.util.List;
 
-import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
-
 /**
- * The Triangle class represents a triangle geometry in three-dimensional space.
- * A triangle is a polygon with three edges and three vertices.
- * This class extends the Polygon class.
+ * Triangle class represents a triangle in 3D Cartesian coordinate system.
  */
 public class Triangle extends Polygon {
-    public Triangle(Point... vertices) {
-        super(vertices);
-    }
 
+    /**
+     * Constructor to initialize a triangle based on three vertices.
+     * @param p1 first Point
+     * @param p2 second Point
+     * @param p3 third Point
+     */
+    public Triangle(Point p1, Point p2, Point p3) {
+        super(p1, p2, p3);
+    }
 
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
-
-        // Find the intersection point with the plane of the triangle
         Point p1 = vertices.get(0);
         Point p2 = vertices.get(1);
         Point p3 = vertices.get(2);
-        // Calculate the normal to the plane
+
         Vector ab = p2.subtract(p1);
         Vector ac = p3.subtract(p1);
         Vector n = ab.crossProduct(ac);
 
         double nd = n.dotProduct(ray.getDir());
-        if (isZero(nd)) {
+        if (Util.isZero(nd)) {
             return null; // The ray is parallel to the plane of the triangle
         }
 
@@ -42,61 +42,38 @@ public class Triangle extends Polygon {
             return null; // The intersection is behind the ray's origin
         }
 
-        Point intersectionPoint = ray.getPoint(t);
-
-        // Check if the intersection point is a vertex of the triangle
-        if (intersectionPoint.equals(p1) ||
-                intersectionPoint.equals(p2) ||
-                intersectionPoint.equals(p3)) {
-            return null;
-        }
-        // Check if the intersection point is inside the triangle
-        if (isPointInTriangle(intersectionPoint, p1, p2, p3)) {
-            if(alignZero(t - maxDistance) <= 0){
-                return List.of(new GeoPoint(this,intersectionPoint));
-            }
-
+        Point p = ray.getPoint(t);
+        if (p.equals(p1) || p.equals(p2) || p.equals(p3)) {
+            return null; // The intersection point is one of the triangle's vertices
         }
 
-        return null;
-    }
+        /*
+         * Compute barycentric coordinates:
+         * to use the barycentric coordinates to determine if a point is inside a triangle,
+         * we need to compute the barycentric coordinates of the point with respect to the triangle.
+         * after some proofs, we found the matrix equation:
+         *
+         * |d00  d01| |v|= |d02|
+         * |d01  d11| |v|= |d12|
+         *
+         * so we can use Kermer's rule to solve the equations and found v, u and w
+         */
+        Vector ap = p.subtract(p1);
+        double dot00 = ab.dotProduct(ab);
+        double dot01 = ab.dotProduct(ac);
+        double dot02 = ab.dotProduct(ap);
+        double dot11 = ac.dotProduct(ac);
+        double dot12 = ac.dotProduct(ap);
 
-
-    /**
-     * Checks if a point is inside a triangle using barycentric coordinates.
-     *
-     * @param p  The point to check.
-     * @param p1 The first vertex of the triangle.
-     * @param p2 The second vertex of the triangle.
-     * @param p3 The third vertex of the triangle.
-     * @return true if the point is inside the triangle, false otherwise.
-     */
-    private boolean isPointInTriangle(Point p, Point p1, Point p2, Point p3) {
-        // Calculate vectors
-        Vector v0 = p2.subtract(p1);
-        Vector v1 = p3.subtract(p1);
-        Vector v2 = p.subtract(p1);
-
-        // Compute dot products in order to calculate barycentric coordinates
-        double dot00 = v0.dotProduct(v0);
-        double dot01 = v0.dotProduct(v1);
-        double dot02 = v0.dotProduct(v2);
-        double dot11 = v1.dotProduct(v1);
-        double dot12 = v1.dotProduct(v2);
-
-        // Compute barycentric coordinates
-        // u, v, and w are the barycentric coordinates of the point- we can present every point as a linear combination of the vertices
-        //invDenom is the inverse of the matrix determinant that we use to calculate the barycentric coordinates by its formula
         double invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
         double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
         double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
         double w = 1.0 - u - v;
 
-        // Check if point is in triangle- if the barycentric coordinates are positive and their sum is less than or equal to 1
-        if (u > 0 && v > 0 && w > 0 && u + v + w <= 1) {
-            return true;
+        // Check if the point is inside the triangle
+        if (Util.alignZero(u) > 0 && Util.alignZero(v) > 0 && Util.alignZero(w) > 0 && Util.alignZero(p.distanceSquared(ray.getPoint(0)) - maxDistance*maxDistance)<=0) {
+            return List.of(new GeoPoint(this, p));
         }
-        return false;
+        return null;
     }
-
 }

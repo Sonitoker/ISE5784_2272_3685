@@ -97,39 +97,70 @@ public class Polygon extends  Geometry {
     }
 
 
+//TODO: fix the following implementation to handle maxDistance correctly
 
+    //    // Check if the ray intersects the plane of the polygon
+//    List<Point> intersections = plane.findIntersections(ray);
+//        if (intersections == null) {
+//        return null;
+//    }
+//
+//    Point intersection = intersections.getFirst();
+//        if (alignZero(intersection.distanceSquared(ray.getHead()) - maxDistance * maxDistance) > 0d) {
+//        return null;
+//    }
+//
+//    Vector v = ray.getDir();
+//
+//    // Check if the intersection point is inside the polygon
+//        for (int i = 0; i < vertices.size(); i++) {
+//        Point vi = vertices.get(i);
+//        Point vi1 = vertices.get((i + 1) % vertices.size());
+//        Vector edge = vi1.subtract(vi);
+//        Vector vp = intersection.subtract(vi);
+//
+//        if (Util.isZero(edge.dotProduct(vp)) || v.dotProduct(edge.crossProduct(vp)) < 0) {
+//            return null;
+//        }
+//    }
+//
+//    // If all dot products are positive, the point is inside the polygon
+//        return List.of(new GeoPoint(this, intersection));
+//}
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
-        //check if the ray intersects the plane of the polygon- the polygon is on a plane
-        Plane plane = new Plane(vertices.get(0), vertices.get(1), vertices.get(2));
-        List<Point> intersections = plane.findIntersections(ray);
-        if (intersections == null || alignZero(intersections.get(0).distanceSquared(ray.getPoint(0d)) - maxDistance) > 0d){
-            return null;
+        // Find and return the intersection points of the ray with the plane
+        List<Point> points = plane.findIntersections(ray);
+
+        // If the ray does not intersect the plane or the intersection point is too far, return null
+        if (points == null || alignZero(points.getFirst().distanceSquared(ray.getHead()) - maxDistance * maxDistance) > 0d) return null;
+
+        // Initialize a list to hold the normals of the edges of the polygonal base
+        List<Vector> normals = new LinkedList<>();
+
+        // Get the starting point and direction of the ray
+        final Point startPoint = ray.getHead();
+        final Vector dir = ray.getDir();
+
+        // Calculate the normal vector for each edge of the polygonal base
+        Vector v1 = vertices.getFirst().subtract(startPoint);
+        for (Point p : vertices.subList(1, size)) {
+            Vector v2 = p.subtract(startPoint);
+            normals.add(v1.crossProduct(v2).normalize());
+            v1 = v2;
         }
+        // Add the normal for the edge connecting the last vertex to the first vertex
+        normals.add(vertices.getLast().subtract(startPoint).crossProduct(vertices.getFirst().subtract(startPoint)).normalize());
 
-        Point p0 = ray.getHead();
-        Vector v = ray.getDir();
-
-        // Check if the intersection point is inside the polygon
-        Point p = intersections.get(0);
-        for (Point vi : vertices) {
-            int nextIndex = (vertices.indexOf(vi) + 1) % vertices.size();
-            Point vi1 = vertices.get(nextIndex);
-            Vector edge = vi1.subtract(vi);
-            Vector vp = p.subtract(vi);
-            try {
-                Vector crossProduct = edge.crossProduct(vp);
-            }
-            catch (IllegalArgumentException e){
+        // Determine if the ray direction is consistently on one side of all the polygon's edges
+        boolean allPositive = dir.dotProduct(normals.getFirst()) > 0d;
+        for (Vector normal : normals) {
+            double s = dir.dotProduct(normal);
+            // If the dot product is zero or if it changes sign, the ray does not intersect the polygon's base
+            if (Util.isZero(s) || (Util.alignZero(s) > 0d != allPositive)) {
                 return null;
             }
-            Vector crossProduct = edge.crossProduct(vp);
-            double dotProduct = v.dotProduct(crossProduct);    //if the point is outside the polygon
-            if (dotProduct < 0) {
-                return null;
-            }
         }
-        //if all dot products are positive, the point is inside the polygon
-        return List.of(new GeoPoint(this, p));
+        return List.of(new GeoPoint(this, points.getFirst()));
     }
 }

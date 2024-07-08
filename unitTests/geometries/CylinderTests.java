@@ -32,7 +32,7 @@ class CylinderTests {
         // ============ Equivalence Partitions Tests ==============
 
 
-        Cylinder cylinder = new Cylinder(1, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 5);
+        Cylinder cylinder = new Cylinder( new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)),1, 5);
 
         // Test normal to a point on the lateral surface
 
@@ -128,7 +128,7 @@ class CylinderTests {
      */
     @Test
     void testFindIntersections() {
-        Cylinder cylinder2 = new Cylinder(2, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 2);
+        Cylinder cylinder2 = new Cylinder( new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 2,2);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray's line is outside the cylinder (0 points)
@@ -182,7 +182,7 @@ class CylinderTests {
     }
     @Test
     void testFindIntersectionsHelper(){
-        Cylinder cylinder = new Cylinder(1, new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)), 2);
+        Cylinder cylinder = new Cylinder( new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)),1, 2);
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray's line is outside the cylinder (0 points)
         assertNull(cylinder.findIntersections(new Ray(new Point(0, 0, 2), new Vector(0, 0, 1))),

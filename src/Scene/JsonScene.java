@@ -174,7 +174,7 @@ public class JsonScene {
         double radius = ((Number) cylinder.get("radius")).doubleValue();
         double height = ((Number) cylinder.get("height")).doubleValue();
         Ray axis = parseRay((JSONObject) cylinder.get("axis"));
-        return new Cylinder( radius, axis, height);
+        return new Cylinder( axis,radius,height);
     }
 
     private static Ray parseRay(JSONObject axis) {

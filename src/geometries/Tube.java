@@ -42,21 +42,21 @@ public class Tube extends RadialGeometry {
      */
     public Vector getNormal(Point p) {
 
-            // Calculate the vector from the base point of the axis to the given point
-            Vector vectorFromAxisStart = p.subtract(axis.getHead());
+        // Calculate the vector from the base point of the axis to the given point
+        Vector vectorFromAxisStart = p.subtract(axis.getHead());
 
-            // Project the above vector on the axis direction to find the projection point on the axis
-            double t = axis.getDir().dotProduct(vectorFromAxisStart);
-            Point o;
-            if(isZero(t))
-                o=axis.getHead();
-            else
-                o = axis.getPoint(t);
+        // Project the above vector on the axis direction to find the projection point on the axis
+        double t = axis.getDir().dotProduct(vectorFromAxisStart);
+        Point o;
+        if(isZero(t))
+            o=axis.getHead();
+        else
+            o = axis.getPoint(t);
 
-            // Calculate the normal vector by subtracting the projection point from the given point
-            Vector normal = p.subtract(o).normalize();
+        // Calculate the normal vector by subtracting the projection point from the given point
+        Vector normal = p.subtract(o).normalize();
 
-            return normal;
+        return normal;
 
 
     }

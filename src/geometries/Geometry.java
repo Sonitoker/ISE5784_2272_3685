@@ -19,15 +19,15 @@ public abstract class Geometry extends  Intersectable {
      * @param p The point at which to compute the normal vector.
      * @return The normal vector to the geometry at the given point.
      */
-   public abstract Vector getNormal(Point p);
+    public abstract Vector getNormal(Point p);
 
-   /**
-    * Getter for the emission color of the geometry
-    * @return The emission color of the geometry
-    */
-   public Color getEmission() {
-       return emission;
-   }
+    /**
+     * Getter for the emission color of the geometry
+     * @return The emission color of the geometry
+     */
+    public Color getEmission() {
+        return emission;
+    }
 
     /**
      * Setter for the emission color of the geometry

@@ -19,9 +19,9 @@ public abstract class Intersectable {
     }
 
 
-     /**
-      * A class representing a point and the geometry it intersects.
-      */
+    /**
+     * A class representing a point and the geometry it intersects.
+     */
     public static class GeoPoint {
         public Geometry geometry;
         public Point point;
@@ -37,20 +37,20 @@ public abstract class Intersectable {
 
         }
 
-         @Override
-         public boolean equals(Object o) {
-             if (this == o) return true;
-             if (!(o instanceof GeoPoint gPoint)) return false;
-             return point.equals(gPoint.point) && geometry.equals(gPoint.geometry);
-         }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof GeoPoint gPoint)) return false;
+            return point.equals(gPoint.point) && geometry.equals(gPoint.geometry);
+        }
 
-         @Override
-         public String toString() {
-                return "GeoPoint{" +
-                        "geometry=" + geometry +
-                        ", point=" + point +
-                        '}';
-            }
+        @Override
+        public String toString() {
+            return "GeoPoint{" +
+                    "geometry=" + geometry +
+                    ", point=" + point +
+                    '}';
+        }
     }
 
     /**
