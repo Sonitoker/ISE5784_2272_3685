@@ -107,14 +107,15 @@ public class RenderTests {
 
     @Test
     public void basicRenderJson2() {
+
         assertDoesNotThrow(() -> {
-                    final Camera.Builder camera = Camera.getBuilder()
-                            .setRayTracer(new SimpleRayTracer(scene))
-                            .setDirection(new Vector(0, 1, -0.1).normalize(), new Vector(0, 1, 10).normalize())
-                            .setLocation(new Point(0, -350, 45))//Point(0, 130, 30)
-                            .setVpDistance(500)
-                            .setVpSize(150, 150);
-                    Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
+            final Camera.Builder camera = Camera.getBuilder()
+                    .setRayTracer(new SimpleRayTracer(scene))
+                    .setDirection(new Vector(-22,355,-32).normalize(), new Vector(0, 32, 355).normalize())
+                    .setLocation(new Point(50, -350, 45))
+                    .setVpDistance(500)
+                    .setVpSize(150, 150);
+            Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
 
                     camera
                             .setRayTracer(new SimpleRayTracer(scene))

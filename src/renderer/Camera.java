@@ -207,7 +207,7 @@ public class Camera implements Cloneable {
             if (!isZero(camera.vTo.dotProduct(camera.vRight)) || !isZero(camera.vTo.dotProduct(camera.vUp)) || !isZero(camera.vUp.dotProduct(camera.vRight))) {
                 throw new IllegalArgumentException("The 3 vectors must be orthogonal");
             }
-            if (camera.vTo.length() != 1 || camera.vRight.length() != 1 || camera.vUp.length() != 1) {
+            if (alignZero(camera.vTo.length() )!= 1 || alignZero(camera.vRight.length()) != 1 || alignZero(camera.vUp.length()) != 1) {
                 throw new IllegalArgumentException("The 3 vectors must be normalized");
             }
 
