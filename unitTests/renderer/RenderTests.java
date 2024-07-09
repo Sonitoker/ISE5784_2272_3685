@@ -111,7 +111,7 @@ public class RenderTests {
         assertDoesNotThrow(() -> {
             final Camera.Builder camera = Camera.getBuilder()
                     .setRayTracer(new SimpleRayTracer(scene))
-                    .setDirection(new Vector(-22,355,-32).normalize(), new Vector(0, 32, 355).normalize())
+                    .setDirection(new Vector(-50,354,-37).normalize(), new Vector(37, 37, 304).normalize())
                     .setLocation(new Point(50, -350, 45))
                     .setVpDistance(500)
                     .setVpSize(150, 150);
