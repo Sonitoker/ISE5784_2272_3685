@@ -1,17 +1,20 @@
 package geometries;
 
 import primitives.*;
+
 import java.util.List;
 
 /**
- * Interface for geometrical objects that can be intersected by a ray.
+ * Abstract class for geometrical objects that can be intersected by a ray.
  */
 public abstract class Intersectable {
 
+
+
     /**
      * Finds all intersection points between the given ray and the geometrical object.
-     * @param ray
-     * @return
+     * @param ray the ray to intersect with the geometrical object
+     * @return a list of intersection points, or null if there are no intersections
      */
     public List<Point> findIntersections(Ray ray) {
         var geoList = findGeoIntersections(ray);
@@ -76,5 +79,28 @@ public abstract class Intersectable {
 
     protected abstract List<GeoPoint>
     findGeoIntersectionsHelper(Ray ray, double maxDistance);
+
+    /**
+     * finds the minimum coordinates of the geometry
+     * if returns null the geometry is infinite
+     * @return Point
+     */
+    public abstract Point getMinCoords();
+
+    /**
+     * finds the maximum coordinates of the geometry
+     * if returns null the geometry is infinite
+     * @return Point
+     */
+    public abstract Point getMaxCoords();
+
+    /**
+     * finds the center point of the geometry
+     * @return Point
+     */
+    public abstract Point getCenterPoint();
+
+
+
 }
 

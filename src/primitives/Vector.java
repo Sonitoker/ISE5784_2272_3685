@@ -128,5 +128,6 @@ public class Vector extends Point {
         return new Vector(xyz.scale(1 / length));
     }
 
+
 }
 

@@ -44,7 +44,7 @@ public class SimpleRayTracer extends RayTracerBase{
 
         // Check if there is any intersection between the object
         // from the intersection point to the light source
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(geoPoint.point));
+        List<GeoPoint> intersections = scene.getIntersectedGeometries(lightRay).findGeoIntersections(lightRay, light.getDistance(geoPoint.point));
         // If no intersection the object is translucent (attenuation factor equal to 1)
         if (intersections == null) return Double3.ONE;
 
@@ -91,7 +91,7 @@ public class SimpleRayTracer extends RayTracerBase{
      * @return the closest intersection point
      */
     private GeoPoint findClosestIntersection(Ray ray) {
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
+        List<GeoPoint> intersections = scene.getIntersectedGeometries(ray).findGeoIntersections(ray);
         return intersections == null?  null: ray.findClosestGeoPoint(intersections);
     }
 

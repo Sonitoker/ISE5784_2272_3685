@@ -171,5 +171,33 @@ public class Tube extends RadialGeometry {
     }
 
 
+    /**
+     * not implemented
+     * @implNote not inew NotImplemplemented
+     */
+    @Override
+    public Point getMinCoords()
+    {
+        return null;
+    }
+
+    /**
+     * not implemented
+     * @implNote not implemented
+     */
+    @Override
+    public Point getMaxCoords()
+    {
+        return null;
+    }
+
+    /**
+     * not implemented
+     * @implNote not implemented
+     */
+    @Override
+    public Point getCenterPoint() {
+        return null;
+    }
 
 }

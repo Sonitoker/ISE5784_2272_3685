@@ -9,9 +9,14 @@ import primitives.Ray;
  */
 public abstract class  RayTracerBase  {
     protected Scene scene;
+
+
+
     public RayTracerBase(Scene scene) {
         this.scene = scene;
     }
+
+
     /**
      * Traces a ray through the scene and returns the color of the intersection point.
      * @param ray The ray to trace.

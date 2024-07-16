@@ -125,4 +125,20 @@ public class Point {
         return xyz.d3;
     }
 
+    /**
+     * Returns the coordinate of the point at the specified index.
+     *
+     * @param index The index of the coordinate to return (0 for x, 1 for y, 2 for z).
+     * @return The coordinate of the point at the specified index.
+     */
+    public double getCoord(int index) {
+        switch (index) {
+            case 0: return xyz.d1;
+            case 1: return xyz.d2;
+            case 2: return xyz.d3;
+            default: throw new IllegalArgumentException("Index must be 0, 1, or 2");
+        }
+    }
+
+
 }

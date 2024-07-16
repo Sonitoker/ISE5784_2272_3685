@@ -1,22 +1,13 @@
 package Scene;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+
 import geometries.Geometries;
-import geometries.Intersectable;
 import lighting.AmbientLight;
 import lighting.LightSource;
 import primitives.Color;
-import primitives.Point;
 import primitives.Ray;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +21,7 @@ public class Scene {
     public AmbientLight ambientLight = AmbientLight.NONE;
     public Geometries geometries = new Geometries();
     public List<LightSource> lights= new LinkedList<>();
+    public BVH bvh;
     /**
      * Constructs a scene with the given name.
      *
@@ -83,5 +75,28 @@ public class Scene {
     public Scene setLights(List<LightSource> lights) {
         this.lights = lights;
         return this;
+    }
+
+    /**
+     * Sets the BVH of the scene.
+     *
+     * @param geometries The geometries of the scene.
+     * @return The scene object.
+     */
+    public Scene setBVH(Geometries geometries) {
+        bvh = new BVH(geometries);
+        return this;
+    }
+    /**
+     * add geometries to the scene
+     * @param ray the ray to check intersection with
+     * @return the geometries that intersect with the ray
+     */
+    public Geometries getIntersectedGeometries(Ray ray)
+    {
+        if(bvh == null)
+            return geometries;
+
+        return bvh.getIntersectedGeometries(ray);
     }
 }

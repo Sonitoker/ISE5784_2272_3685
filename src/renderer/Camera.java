@@ -6,7 +6,8 @@ import primitives.Ray;
 import primitives.Vector;
 
 
-import java.util.MissingResourceException;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -24,6 +25,14 @@ public class Camera implements Cloneable {
     private double width = 0d, height = 0d, distance = 0d;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    private Blackboard blackboard;
+    private boolean BVH = false;
+
+    ///
+    private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+    private double printInterval = 0; // printing progress percentage interval
+
+
 
     /**
      * camera getter
@@ -78,6 +87,10 @@ public class Camera implements Cloneable {
          * The camera to build
          */
         private final Camera camera = new Camera();
+
+        ///
+         private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
+
 
 
         /**
@@ -160,6 +173,46 @@ public class Camera implements Cloneable {
         }
 
         /**
+         * Set the blackboard
+         *
+         * @param blackboard the blackboard
+         * @return the camera builder
+         */
+        public Builder setBlackboard(Blackboard blackboard) {
+            camera.blackboard = blackboard;
+            return this;
+        }
+
+        /**
+         * Set the BVH
+         *
+         * @param BVH the BVH
+         * @return the camera builder
+         */
+        public Builder setBVH(boolean BVH) {
+            camera.BVH = BVH;
+            return this;
+        }
+
+        ///
+        public Builder setMultithreading(int threads) {
+            if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
+            if (threads >= -1) camera.threadsCount = threads;
+            else { // == -2
+                int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
+                camera.threadsCount = cores <= 2 ? 1 : cores;
+            }
+            return this;
+        }
+        public Builder  setDebugPrint(double interval) {
+            camera.printInterval = interval;
+            return this;
+        }
+
+
+
+
+        /**
          * Build the camera
          *
          * @return the camera
@@ -192,6 +245,10 @@ public class Camera implements Cloneable {
             if(camera.rayTracer == null) {
                 throw new MissingResourceException(description, className, "rayTracer");
             }
+            if (camera.blackboard == null) {
+                camera.blackboard = new Blackboard(0);
+
+            }
 
             if (camera.width < 0) {
                 throw new IllegalArgumentException("width must be positive");
@@ -207,7 +264,7 @@ public class Camera implements Cloneable {
             if (!isZero(camera.vTo.dotProduct(camera.vRight)) || !isZero(camera.vTo.dotProduct(camera.vUp)) || !isZero(camera.vUp.dotProduct(camera.vRight))) {
                 throw new IllegalArgumentException("The 3 vectors must be orthogonal");
             }
-            if (alignZero(camera.vTo.length() )!= 1 || alignZero(camera.vRight.length()) != 1 || alignZero(camera.vUp.length()) != 1) {
+            if (alignZero(camera.vTo.length() )!= 1 || camera.vRight.length() != 1 || camera.vUp.length() != 1) {
                 throw new IllegalArgumentException("The 3 vectors must be normalized");
             }
 
@@ -244,6 +301,48 @@ public class Camera implements Cloneable {
         return new Ray(p0, pIJ.subtract(p0).normalize()); //return the ray from the camera to the center of the pixel
 
     }
+
+    /**
+     * Construct rays through a pixel in the view plane
+     *
+     * @param nX the number of pixels in the x direction
+     * @param nY the number of pixels in the y direction
+     * @param j  the x index of the pixel
+     * @param i  the y index of the pixel
+     * @return the list of rays through the pixel
+     */
+    public List<Ray> constructRays(int nX, int nY, int j, int i) {
+        List<Ray> rays = new ArrayList<>();
+        Random random = new Random();
+        int gridSize = blackboard.getGridSize();
+        double Ry = height / nY;
+        double Rx = width / nX;
+        double stepY = Ry / gridSize;
+        double stepX = Rx / gridSize;
+
+        for (int subI = 0; subI < gridSize; subI++) {
+            for (int subJ = 0; subJ < gridSize; subJ++) {
+                double jitterY = random.nextDouble()%gridSize; // Random offset in Y direction
+                double jitterX = random.nextDouble()%gridSize; // Random offset in X direction
+
+                double offsetI = (subI + jitterY) * stepY;
+                double offsetJ = (subJ + jitterX) * stepX;
+                double Yi = -(i - (nY - 1) / 2d) * Ry + offsetI;
+                double Xj = (j - (nX - 1) / 2d) * Rx + offsetJ;
+                Point pIJ = p0;
+                if (!isZero(Xj)) pIJ = pIJ.add(vRight.scale(Xj));
+                if (!isZero(Yi)) pIJ = pIJ.add(vUp.scale(Yi));
+                pIJ = pIJ.add(vTo.scale(distance)); // pIJ is the center of the pixel in the view plane
+
+                Ray ray = new Ray(p0, pIJ.subtract(p0).normalize());
+                rays.add(ray);
+            }
+        }
+        return rays;
+    }
+
+
+
     /**
      * Render the image
      * @return the camera
@@ -252,11 +351,18 @@ public class Camera implements Cloneable {
 
         int nX = imageWriter.getNx();
         int nY = imageWriter.getNy();
-        for (int i = 0; i < nY; i++) {
-            for (int j = 0; j < nX; j++) {
-                castRay(nX, nY, j, i);
-            }
+        ///
+        Pixel.initialize(nY, nX, printInterval);
+        if (threadsCount == 0)
+            for (int i = 0; i < nY; i++)
+                for (int j = 0; j < nX; j++)
+                    castRay(nX, nY, j, i);
+        else if (threadsCount == -1) {
+            IntStream.range(0, nY).parallel() //
+                    .forEach(i -> IntStream.range(0, nX).parallel() //
+                            .forEach(j -> castRay(nX, nY, j, i)));
         }
+
         return this;
     }
 
@@ -269,9 +375,22 @@ public class Camera implements Cloneable {
      * @param i  the y index of the pixel
      */
     private void castRay(int nX, int nY, int j, int i) {
-        Ray ray = constructRay(nX, nY, j, i);
-        Color color= rayTracer.traceRay(ray);
-        imageWriter.writePixel(j, i, color);
+        if(blackboard.isAntiAliasingEnabled()) {
+            List<Ray> rays = constructRays(nX, nY, j, i);
+            Color color = Color.BLACK;
+            for (Ray ray : rays) {
+                color = color.add(rayTracer.traceRay(ray));
+            }
+            color = color.scale(1d/rays.size());
+            imageWriter.writePixel(j, i, color);
+        } else {
+            Ray ray = constructRay(nX, nY, j, i);
+            Color color= rayTracer.traceRay(ray);
+            imageWriter.writePixel(j, i, color);
+        }
+        ///
+        Pixel.pixelDone();
+
     }
 
 

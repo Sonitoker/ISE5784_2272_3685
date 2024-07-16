@@ -84,6 +84,36 @@ public class RenderTests {
                 .writeToImage();
     }
 
+
+    @Test
+    public void renderMultiColorTestAntiAliasing() {
+        scene.geometries.add( // center
+                new Sphere(50d, new Point(0, 0, -100)),
+                // up left
+                new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100))
+                        .setEmission(new Color(GREEN)),
+                // down left
+                new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100))
+                        .setEmission(new Color(RED)),
+                // down right
+                new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))
+                        .setEmission(new Color(BLUE)));
+        scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.2, 0.2, 0.2))); //
+
+       final Camera.Builder camera2 = Camera.getBuilder()
+                .setRayTracer(new SimpleRayTracer(scene))
+                .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0,1,0))
+                .setVpDistance(100)
+                .setVpSize(500, 500)
+                .setBlackboard(new Blackboard(9).setAntiAliasingEnabled(true));
+        camera2
+                .setImageWriter(new ImageWriter("color render test anti aliasing", 1000, 1000))
+                .build()
+                .renderImage()
+                .printGrid(100, new Color(WHITE))
+                .writeToImage();
+    }
+
     /** Test for json based scene - for bonus 5*/
     @Test
     public void basicRenderJson()  {
@@ -95,6 +125,7 @@ public class RenderTests {
                 .setVpSize(280, 280);
         assertDoesNotThrow(() -> {
             Scene scene = JsonScene.importScene("JsonScenes/sceneTrial.json");
+            scene.setBVH(scene.geometries);
 
             camera1.setImageWriter(new ImageWriter("basicRenderJson", 1000, 1000))
                     .setRayTracer(new SimpleRayTracer(scene))
@@ -106,26 +137,84 @@ public class RenderTests {
 
 
     @Test
-    public void basicRenderJson2() {
+    public void diamonedRing() {
 
         assertDoesNotThrow(() -> {
-            final Camera.Builder camera = Camera.getBuilder()
+            Camera.Builder camera = Camera.getBuilder()
                     .setRayTracer(new SimpleRayTracer(scene))
-                    .setDirection(new Vector(-50,354,-37).normalize(), new Vector(37, 37, 304).normalize())
+                    .setDirection(new Vector(-50,354,-37).normalize(), new Vector(0,37, 354).normalize())
                     .setLocation(new Point(50, -350, 45))
                     .setVpDistance(500)
                     .setVpSize(150, 150);
             Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
+            scene.setBVH(scene.geometries);
 
                     camera
                             .setRayTracer(new SimpleRayTracer(scene))
                             .setImageWriter(new ImageWriter("MINIP test", 1000, 1000))
+                            .setMultithreading(-1) //
+                            .setDebugPrint(0.1) // progress update intervak in %
                             .build()
                             .renderImage()
                             .writeToImage();
                 }, "Failed to render image"
         );
     }
+
+
+
+    @Test
+    public void diamonedRingAntiAliasing() {
+
+
+        assertDoesNotThrow(() -> {
+                    final Camera.Builder camera = Camera.getBuilder()
+                            .setRayTracer(new SimpleRayTracer(scene))
+                            .setDirection(new Vector(-50,354,-37).normalize(), new Vector(0,37, 354).normalize())
+                            .setLocation(new Point(50, -350, 45))
+                            .setVpDistance(500)
+                            .setVpSize(150, 150)
+                            .setBlackboard(new Blackboard(9).setAntiAliasingEnabled(true));
+                    Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
+
+                    camera
+                            .setRayTracer(new SimpleRayTracer(scene))
+                            .setImageWriter(new ImageWriter("MinipAntiAliasing test", 1000, 1000))
+                            .setMultithreading(-1) //
+                            .setDebugPrint(0.1) // progress update intervak in %
+                            .build()
+                            .renderImage()
+                            .writeToImage();
+                }, "Failed to render image"
+        );
+    }
+
+    @Test
+    public void diamonedRingBVH() {
+
+
+        assertDoesNotThrow(() -> {
+                    final Camera.Builder camera = Camera.getBuilder()
+                            .setDirection(new Vector(-50,354,-37).normalize(), new Vector(0,37, 354).normalize())
+                            .setLocation(new Point(50, -350, 45))
+                            .setVpDistance(500)
+                            .setVpSize(150, 150)
+                            .setBlackboard(new Blackboard(9).setAntiAliasingEnabled(true));
+                    Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
+                    scene.setBVH(scene.geometries);
+
+                    camera
+                            .setRayTracer(new SimpleRayTracer(scene))
+                            .setImageWriter(new ImageWriter("MinipBVH test", 1000, 1000))
+                            .setMultithreading(-1) //
+                            .setDebugPrint(0.1) // progress update intervak in %
+                            .build()
+                            .renderImage()
+                            .writeToImage();
+                }, "Failed to render image"
+        );
+    }
+
 
     /**
      * the bonus for stage 7, Produces a spectacular image with many bodies.
@@ -207,6 +296,7 @@ public class RenderTests {
         scene.lights.add(new SpotLight(new Vector(1, 0, 0), new Color(BLUE).reduce(2), new Point(50, 0, 5)));
 
         scene.setBackground(new Color(CYAN));
+
 
         ImageWriter imageWriter = new ImageWriter("myShapeBonus", 500, 500);
 
