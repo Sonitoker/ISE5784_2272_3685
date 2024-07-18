@@ -49,6 +49,4 @@ record Pixel(int row, int col) {
         if (flag) System.out.printf(PRINT_FORMAT, percentage / 10d);
     }
 
-
-
 }

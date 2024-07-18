@@ -75,7 +75,7 @@ public class RenderTests {
                 new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))
                         .setEmission(new Color(BLUE)));
         scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.2, 0.2, 0.2))); //
-
+        //scene.setBVH(scene.geometries);
         camera
                 .setImageWriter(new ImageWriter("color render test", 1000, 1000))
                 .build()
@@ -125,7 +125,6 @@ public class RenderTests {
                 .setVpSize(280, 280);
         assertDoesNotThrow(() -> {
             Scene scene = JsonScene.importScene("JsonScenes/sceneTrial.json");
-            scene.setBVH(scene.geometries);
 
             camera1.setImageWriter(new ImageWriter("basicRenderJson", 1000, 1000))
                     .setRayTracer(new SimpleRayTracer(scene))
