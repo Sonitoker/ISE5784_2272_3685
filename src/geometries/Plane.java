@@ -92,35 +92,14 @@ public class Plane extends  Geometry {
 
         }
     }
-
-    /**
-     * returns the minimum coordinates of the plane
-     * @return Point
-     */
     @Override
-    public Point getMinCoords()
-    {
-        return new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+    public boolean isIntersectBox(Ray ray, double maxDistance) {
+        return true;
     }
 
-    /**
-     * returns the maximum coordinates of the plane
-     * @return Point
-     */
     @Override
-    public Point getMaxCoords()
-    {
-        return new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-    }
-
-    /**
-     * plane is infinate
-     * @Note: this function returns null
-     * @return null
-     */
-    @Override
-    public Point getCenterPoint() {
-        return new Point(0,0,0);
+    public void constructBox() {
+        return;
     }
 
 }

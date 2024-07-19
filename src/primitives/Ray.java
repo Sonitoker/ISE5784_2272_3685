@@ -22,6 +22,8 @@ public class Ray {
      */
     private static final double DELTA = 0.1;
 
+    public boolean isBVH=true;
+
     /**
      * Constructs a new Ray with the specified starting point and direction.
      *
@@ -31,6 +33,10 @@ public class Ray {
     public Ray(Point p, Vector vec) {
         this.head = p;
         this.direction=vec.normalize();
+    }
+
+    public void setBVH(boolean isBVH){
+        this.isBVH=isBVH;
     }
 
     /**

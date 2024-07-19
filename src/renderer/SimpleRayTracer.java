@@ -45,11 +45,7 @@ public class SimpleRayTracer extends RayTracerBase{
         // Check if there is any intersection between the object
         // from the intersection point to the light source
         List<GeoPoint> intersections;
-     //   if (scene.getIntersectedGeometries(lightRay))
-            intersections = scene.getIntersectedGeometries(lightRay).findGeoIntersections(lightRay, light.getDistance(geoPoint.point));
-      //  else
-       //     intersections=null;
-        // If no intersection the object is translucent (attenuation factor equal to 1)
+            intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(geoPoint.point));
         if (intersections == null) return Double3.ONE;
 
         // Initiate the transparency to 1 (the object is translucent)
@@ -75,6 +71,7 @@ public class SimpleRayTracer extends RayTracerBase{
      * @param scene The scene to render.
      */
     public SimpleRayTracer(Scene scene) {
+
         super(scene);
     }
 
@@ -85,6 +82,7 @@ public class SimpleRayTracer extends RayTracerBase{
      */
     @Override
     public Color traceRay(Ray ray) {
+        ray.setBVH(scene.isBVH);
         GeoPoint closestPoint = findClosestIntersection(ray);
         return closestPoint == null ? scene.background : calcColor(closestPoint, ray);
     }
@@ -96,10 +94,7 @@ public class SimpleRayTracer extends RayTracerBase{
      */
     private GeoPoint findClosestIntersection(Ray ray) {
         List<GeoPoint> intersections;
-       // if(scene.getIntersectedGeometries(ray))
-            intersections = scene.getIntersectedGeometries(ray).findGeoIntersections(ray);
-       // else
-        //    intersections=null;
+            intersections = scene.geometries.findGeoIntersections(ray);
         return intersections == null?  null: ray.findClosestGeoPoint(intersections);
     }
 

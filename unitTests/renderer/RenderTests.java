@@ -146,7 +146,7 @@ public class RenderTests {
                     .setVpDistance(500)
                     .setVpSize(150, 150);
             Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
-            scene.setBVH(scene.geometries);
+
 
                     camera
                             .setRayTracer(new SimpleRayTracer(scene))
@@ -188,31 +188,7 @@ public class RenderTests {
         );
     }
 
-    @Test
-    public void diamonedRingBVH() {
 
-
-        assertDoesNotThrow(() -> {
-                    final Camera.Builder camera = Camera.getBuilder()
-                            .setDirection(new Vector(-50,354,-37).normalize(), new Vector(0,37, 354).normalize())
-                            .setLocation(new Point(50, -350, 45))
-                            .setVpDistance(500)
-                            .setVpSize(150, 150)
-                            .setBlackboard(new Blackboard(9).setAntiAliasingEnabled(true));
-                    Scene scene = JsonScene.importScene("jsonScenes/diamondScene.json");
-                    scene.setBVH(scene.geometries);
-
-                    camera
-                            .setRayTracer(new SimpleRayTracer(scene))
-                            .setImageWriter(new ImageWriter("MinipBVH test", 1000, 1000))
-                            .setMultithreading(-1) //
-                            .setDebugPrint(0.1) // progress update intervak in %
-                            .build()
-                            .renderImage()
-                            .writeToImage();
-                }, "Failed to render image"
-        );
-    }
 
 
     /**

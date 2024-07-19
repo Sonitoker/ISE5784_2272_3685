@@ -20,8 +20,9 @@ public class Scene {
     public Color background = Color.BLACK;
     public AmbientLight ambientLight = AmbientLight.NONE;
     public Geometries geometries = new Geometries();
-    public List<LightSource> lights= new LinkedList<>();
-    public BVH bvh;
+    public List<LightSource> lights = new LinkedList<>();
+    public boolean isBVH = true;
+
     /**
      * Constructs a scene with the given name.
      *
@@ -42,6 +43,11 @@ public class Scene {
     public Scene setBackground(Color background) {
         this.background = background;
         return this;
+    }
+
+    public  Scene setIsisBVH(boolean isBVH) {
+        this.isBVH = isBVH;
+        return  this;
     }
 
     /**
@@ -76,27 +82,5 @@ public class Scene {
         this.lights = lights;
         return this;
     }
-
-    /**
-     * Sets the BVH of the scene.
-     *
-     * @param geometries The geometries of the scene.
-     * @return The scene object.
-     */
-    public Scene setBVH(Geometries geometries) {
-        bvh = new BVH(geometries);
-        return this;
-    }
-    /**
-     * add geometries to the scene
-     * @param ray the ray to check intersection with
-     * @return the geometries that intersect with the ray
-     */
-    public Geometries getIntersectedGeometries(Ray ray)
-    {
-        if(bvh == null)
-            return geometries;
-
-        return bvh.getIntersectedGeometries(ray);
-    }
 }
+

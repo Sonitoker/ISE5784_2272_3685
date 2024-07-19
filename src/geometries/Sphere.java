@@ -73,32 +73,22 @@ public class Sphere extends RadialGeometry {
 
     }
 
-
-    /**
-     * finds the minimum coordinates of the sphere
-     * @return the minimum coordinates of the sphere
-     */
     @Override
-    public Point getMinCoords() {
-        return new Point(center.getX() - radius, center.getY() - radius, center.getZ() - radius);
+    public void constructBox() {
+        double X=center.getX();
+        double Y=center.getY();
+        double Z=center.getZ();
+        double minX =X  - radius;
+        double minY = Y - radius;
+        double minZ = Z - radius;
+        double maxX = X + radius;
+        double maxY = Y + radius;
+        double maxZ = Z + radius;
+        box=new Box(minX,minY,minZ,maxX,maxY,maxZ);
     }
 
-    /**
-     * finds the maximum coordinates of the sphere
-     * @return the maximum coordinates of the sphere
-     */
     @Override
-    public Point getMaxCoords() {
-        return new Point(center.getX() + radius, center.getY() + radius, center.getZ() + radius);
-    }
-
-
-    /**
-     * returns the center point of the sphere
-     * @return Point
-     */
-    @Override
-    public Point getCenterPoint() {
-        return center;
+    public boolean isIntersectBox(Ray ray, double maxDistance) {
+        return box.intersects(ray,maxDistance);
     }
 }

@@ -13,6 +13,8 @@ public abstract class  RayTracerBase  {
 
 
     public RayTracerBase(Scene scene) {
+        if(scene.isBVH)
+            scene.geometries.setBoxes();
         this.scene = scene;
     }
 

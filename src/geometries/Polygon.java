@@ -136,54 +136,35 @@ public class Polygon extends  Geometry {
         }
         return  List.of(new GeoPoint(this, intersectionWithPlane.getFirst().point));
     }
-    /**
-     * finds the minimum coordinates of the polygon
-     * @return the minimum coordinates of the polygon
-     */
     @Override
-    public Point getMinCoords() {
-        double minX = Double.MAX_VALUE;
-        double minY = Double.MAX_VALUE;
-        double minZ = Double.MAX_VALUE;
-        for (Point p : vertices) {
-            if (p.getX() < minX) minX = p.getX();
-            if (p.getY() < minY) minY = p.getY();
-            if (p.getZ() < minZ) minZ = p.getZ();
+    public void constructBox() {
+        Point first = vertices.get(0);
+        double minX=first.getX();
+        double maxX=first.getX();
+        double minY=first.getY();
+        double maxY=first.getY();
+        double minZ=first.getZ();
+        double maxZ=first.getZ();
+        for(Point p:vertices){
+            double X=p.getX();
+            double Y=p.getY();
+            double Z=p.getZ();
+            if(X<minX)minX=X;
+            if(X>maxX)maxX=X;
+            if(Y<minY)minY=Y;
+            if(Y>maxY)maxY=Y;
+            if(Z<minZ)minZ=Z;
+            if(Z>maxZ)maxZ=Z;
         }
-        return new Point(minX, minY, minZ);
+        box=new Box(minX,minY,minZ,maxX,maxY,maxZ);
     }
 
-    /**
-     * finds the maximum coordinates of the polygon
-     * @return the maximum coordinates of the polygon
-     */
-    public Point getMaxCoords() {
-        double maxX = Double.MIN_VALUE;
-        double maxY = Double.MIN_VALUE;
-        double maxZ = Double.MIN_VALUE;
-        for (Point p : vertices) {
-            if (p.getX() > maxX) maxX = p.getX();
-            if (p.getY() > maxY) maxY = p.getY();
-            if (p.getZ() > maxZ) maxZ = p.getZ();
-        }
-        return new Point(maxX, maxY, maxZ);
+    @Override
+    public boolean isIntersectBox(Ray ray, double maxDistance) {
+        return box.intersects(ray,maxDistance);
     }
 
-    /**
-     * finds the center point of the polygon
-     * @return the center point of the polygon
-     */
-    public Point getCenterPoint() {
-        double sumX = 0;
-        double sumY = 0;
-        double sumZ = 0;
-        for (Point p : vertices) {
-            sumX += p.getX();
-            sumY += p.getY();
-            sumZ += p.getZ();
-        }
-        return new Point(sumX / vertices.size(), sumY / vertices.size(), sumZ / vertices.size());
-    }
+
 }
 
 

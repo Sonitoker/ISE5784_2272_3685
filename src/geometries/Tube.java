@@ -170,34 +170,13 @@ public class Tube extends RadialGeometry {
         return intersections.isEmpty() ? null : intersections;
     }
 
-
-    /**
-     * not implemented
-     * @implNote not inew NotImplemplemented
-     */
     @Override
-    public Point getMinCoords()
-    {
-        return null;
+    public void constructBox() {
+        return;
     }
 
-    /**
-     * not implemented
-     * @implNote not implemented
-     */
     @Override
-    public Point getMaxCoords()
-    {
-        return null;
+    public boolean isIntersectBox(Ray ray, double maxDistance) {
+        return true;
     }
-
-    /**
-     * not implemented
-     * @implNote not implemented
-     */
-    @Override
-    public Point getCenterPoint() {
-        return null;
-    }
-
 }
