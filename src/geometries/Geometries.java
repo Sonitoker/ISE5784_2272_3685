@@ -24,14 +24,6 @@ public class Geometries extends Intersectable{
         Collections.addAll(this.geometries, geometries); //add all the geometries to the list
     }
 
-    /**
-     * constructor for Geometries class
-     * @param geometries list of geometries
-     */
-    private Geometries(List<Intersectable> geometries)
-    {
-        this.geometries = geometries;
-    }
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         List<GeoPoint> result = null;
@@ -76,5 +68,7 @@ public class Geometries extends Intersectable{
     public void constructBox() {
         return;
     }
+
+
 }
 

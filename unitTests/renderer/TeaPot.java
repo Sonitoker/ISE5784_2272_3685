@@ -2,15 +2,12 @@ package renderer;
 
 import static java.awt.Color.YELLOW;
 import org.junit.jupiter.api.Test;
-import renderer.SimpleRayTracer;
 import geometries.Triangle;
 import lighting.PointLight;
 import primitives.Color;
 import primitives.Material;
 import primitives.Point;
 import primitives.Vector;
-import renderer.Camera;
-import renderer.ImageWriter;
 import Scene.Scene;
 
 /**

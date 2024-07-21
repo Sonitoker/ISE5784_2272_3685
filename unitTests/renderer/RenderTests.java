@@ -170,7 +170,7 @@ public class RenderTests {
                     final Camera.Builder camera = Camera.getBuilder()
                             .setRayTracer(new SimpleRayTracer(scene))
                             .setDirection(new Vector(-50,354,-37).normalize(), new Vector(0,37, 354).normalize())
-                            .setLocation(new Point(50, -350, 45))
+                            .setLocation(new Point(50, -354, 45))
                             .setVpDistance(500)
                             .setVpSize(150, 150)
                             .setBlackboard(new Blackboard(9).setAntiAliasingEnabled(true));
@@ -179,8 +179,8 @@ public class RenderTests {
                     camera
                             .setRayTracer(new SimpleRayTracer(scene))
                             .setImageWriter(new ImageWriter("MinipAntiAliasing test", 1000, 1000))
-                            .setMultithreading(-1) //
-                            .setDebugPrint(0.1) // progress update intervak in %
+                            .setMultithreading(-1)
+                            .setDebugPrint(0.1)
                             .build()
                             .renderImage()
                             .writeToImage();

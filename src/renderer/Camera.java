@@ -26,7 +26,7 @@ public class Camera implements Cloneable {
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
     private Blackboard blackboard;
-    private boolean BVH = false;
+
 
     ///
     private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
@@ -183,18 +183,6 @@ public class Camera implements Cloneable {
             return this;
         }
 
-        /**
-         * Set the BVH
-         *
-         * @param BVH the BVH
-         * @return the camera builder
-         */
-        public Builder setBVH(boolean BVH) {
-            camera.BVH = BVH;
-            return this;
-        }
-
-        ///
         public Builder setMultithreading(int threads) {
             if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
             if (threads >= -1) camera.threadsCount = threads;

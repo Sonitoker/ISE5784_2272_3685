@@ -65,7 +65,6 @@ public class SimpleRayTracer extends RayTracerBase{
 
 
 
-
     /**
      * Constructs a SimpleRayTracer object with the given scene.
      * @param scene The scene to render.
@@ -82,7 +81,7 @@ public class SimpleRayTracer extends RayTracerBase{
      */
     @Override
     public Color traceRay(Ray ray) {
-        ray.setBVH(scene.isBVH);
+        ray. setBVHmprove(scene.isBVH);
         GeoPoint closestPoint = findClosestIntersection(ray);
         return closestPoint == null ? scene.background : calcColor(closestPoint, ray);
     }

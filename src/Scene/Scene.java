@@ -6,8 +6,6 @@ import geometries.Geometries;
 import lighting.AmbientLight;
 import lighting.LightSource;
 import primitives.Color;
-import primitives.Ray;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class Scene {
     public AmbientLight ambientLight = AmbientLight.NONE;
     public Geometries geometries = new Geometries();
     public List<LightSource> lights = new LinkedList<>();
-    public boolean isBVH = true;
+    public boolean isBVH = false;
 
     /**
      * Constructs a scene with the given name.
@@ -32,7 +30,6 @@ public class Scene {
         this.name = name;
     }
 
-    //setters
 
     /**
      * Sets the background color of the scene.
@@ -45,10 +42,6 @@ public class Scene {
         return this;
     }
 
-    public  Scene setIsisBVH(boolean isBVH) {
-        this.isBVH = isBVH;
-        return  this;
-    }
 
     /**
      * Sets the ambient light of the scene.
