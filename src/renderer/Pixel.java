@@ -33,6 +33,7 @@ record Pixel(int row, int col) {
         }
         return null;
     }
+
     static void pixelDone() {
         boolean flag = false;
         int percentage = 0;

@@ -13,11 +13,23 @@ import static org.junit.jupiter.api.Assertions.*;
  * Integration tests for the Camera class.
  */
 public class CameraIntegrationsTest {
-
+    /**
+     * The view plane is defined by the camera location and the direction vectors.
+     */
+    public CameraIntegrationsTest() {
+    }
+    /**
+     * The view plane is defined by the camera location and the direction vectors.
+     */
     private final Vector vUp = new Vector(0, -1, 0);
+    /**
+     * The view plane is defined by the camera location and the direction vectors.
+     */
     private final Vector vTo = new Vector(0, 0, -1);
 
-    // Camera builder
+    /**
+     * The camera builder for the tests.
+     */
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setDirection(vUp, vTo)
             .setVpDistance(1)
@@ -25,11 +37,11 @@ public class CameraIntegrationsTest {
 
 
     /**
-     * Help function to count the number of intersections between a camera and a geometry- DRY principle
+     * Test method for {@link Camera#constructRay(int, int, int, int)}.
      *
-     * @param camera
-     * @param geometry
-     * @param expected number of intersections
+     * @param camera   The camera to test
+     * @param geometry The geometry to test
+     * @param expected The expected number of intersections
      */
     private void helpCountsIntersections(Camera camera, Geometry geometry, int expected) {
         int count = 0;
@@ -54,7 +66,7 @@ public class CameraIntegrationsTest {
     @Test
     public void CameraRaySphereIntegration() {
 
-        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange",800,500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
+        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange", 800, 500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
         Camera camera2 = cameraBuilder.setLocation(new Point(0, 0, 0.5)).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).build();
 
 
@@ -85,7 +97,7 @@ public class CameraIntegrationsTest {
      */
     @Test
     public void CameraRayTriangleIntegration() {
-        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange",800,500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
+        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange", 800, 500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
 
 
         //TC01: Small triangle (1 intersection)
@@ -107,7 +119,7 @@ public class CameraIntegrationsTest {
 
     @Test
     public void CameraRayPlaneIntegration() {
-        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, 1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange",800,500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
+        Camera camera1 = cameraBuilder.setLocation(Point.ZERO).setDirection(new Vector(0, 0, 1), new Vector(0, -1, 0)).setVpDistance(1d).setVpSize(3d, 3d).setImageWriter(new ImageWriter("purpleOrange", 800, 500)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
 
 
         //TC01: The plane parallel to the View Plane (9 intersections)

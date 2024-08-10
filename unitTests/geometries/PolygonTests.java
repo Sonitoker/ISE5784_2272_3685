@@ -17,6 +17,11 @@ import java.util.List;
  */
 public class PolygonTests {
     /**
+     * constructor
+     */
+    private PolygonTests() {
+    }
+    /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals
      */

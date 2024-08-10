@@ -3,6 +3,7 @@ package primitives;
 import java.util.List;
 
 import static primitives.Util.isZero;
+
 import geometries.Intersectable.GeoPoint;
 
 /**
@@ -12,11 +13,11 @@ public class Ray {
     /**
      * The head point of the ray
      */
-    final private  Point head;
+    final private Point head;
     /**
      * The direction vector of the ray
      */
-    final private  Vector direction;
+    final private Vector direction;
     /**
      * The delta value for comparing double values.
      */
@@ -26,8 +27,14 @@ public class Ray {
      * The BVH improvement flag
      */
     public boolean isBVH;
-    public void setBVHmprove(boolean isBVH){
-        this.isBVH=isBVH;
+
+    /**
+     * Setter for the BVH improvement flag
+     *
+     * @param isBVH the BVH improvement flag
+     */
+    public void setBVHmprove(boolean isBVH) {
+        this.isBVH = isBVH;
     }
 
     /**
@@ -38,9 +45,8 @@ public class Ray {
      */
     public Ray(Point p, Vector vec) {
         this.head = p;
-        this.direction=vec.normalize();
+        this.direction = vec.normalize();
     }
-
 
 
     /**
@@ -52,8 +58,8 @@ public class Ray {
      */
     public Ray(Point head, Vector direction, Vector normal) {
         // If the normal vector and the direction vector are orthogonal, the head of the ray is the same as the head of the intersecting point
-        if(isZero(normal.dotProduct(direction)))  this.head = head;
-        // If the normal vector and the direction vector have the same sign, add +DELTA otherwise add -DELTA
+        if (isZero(normal.dotProduct(direction))) this.head = head;
+            // If the normal vector and the direction vector have the same sign, add +DELTA otherwise add -DELTA
         else {
             Vector delta = normal.scale(normal.dotProduct(direction) > 0 ? DELTA : -DELTA);
 
@@ -84,10 +90,9 @@ public class Ray {
     }
 
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         return (obj instanceof Ray other) && this.head.equals(other.head) && this.direction.equals(other.direction);
     }
-
 
 
     @Override
@@ -101,9 +106,9 @@ public class Ray {
      * @param t The distance from the head of the ray.
      * @return The point on the ray at the specified distance from the head.
      */
-    public Point getPoint(double t){
-        if(isZero(t))
-           return head;
+    public Point getPoint(double t) {
+        if (isZero(t))
+            return head;
         return head.add(direction.scale(t));
     }
 

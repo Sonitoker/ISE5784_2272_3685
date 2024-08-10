@@ -13,15 +13,24 @@ import primitives.Color;
 import primitives.Material;
 import primitives.Point;
 import primitives.Vector;
-import renderer.Camera;
-import renderer.ImageWriter;
-import renderer.SimpleRayTracer;
 import Scene.Scene;
 
+/**
+ * Integration tests for the Camera class.
+ */
 public class diamondFinal{
-
+    /**
+     * The view plane is defined by the camera location and the direction vectors.
+     */
+    public diamondFinal() {
+    }
+    /**
+     * The scene for the tests.
+     */
     private final Scene scene = new Scene("Test scene");
-
+    /**
+     * The view plane is defined by the camera location and the direction vectors.
+     */
     @Test
     public void TestCombo() {
 

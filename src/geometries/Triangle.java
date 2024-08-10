@@ -14,6 +14,7 @@ public class Triangle extends Polygon {
 
     /**
      * Constructor to initialize a triangle based on three vertices.
+     *
      * @param p1 first Point
      * @param p2 second Point
      * @param p3 third Point
@@ -71,7 +72,7 @@ public class Triangle extends Polygon {
         double w = 1.0 - u - v;
 
         // Check if the point is inside the triangle
-        if (Util.alignZero(u) > 0 && Util.alignZero(v) > 0 && Util.alignZero(w) > 0 && Util.alignZero(p.distanceSquared(ray.getPoint(0)) - maxDistance*maxDistance)<=0) {
+        if (Util.alignZero(u) > 0 && Util.alignZero(v) > 0 && Util.alignZero(w) > 0 && Util.alignZero(p.distanceSquared(ray.getPoint(0)) - maxDistance * maxDistance) <= 0) {
             return List.of(new GeoPoint(this, p));
         }
         return null;

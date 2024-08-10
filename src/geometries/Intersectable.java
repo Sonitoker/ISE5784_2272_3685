@@ -8,11 +8,19 @@ import java.util.List;
  * Abstract class for geometrical objects that can be intersected by a ray.
  */
 public abstract class Intersectable {
-
-protected Box box;
+    /**
+     * Constructs a new Intersectable object.
+     */
+    public Intersectable() {
+    }
+    /**
+     * The Axis-Aligned Bounding Box (AABB) of the geometrical object.
+     */
+    public Box box;
 
     /**
      * Finds all intersection points between the given ray and the geometrical object.
+     *
      * @param ray the ray to intersect with the geometrical object
      * @return a list of intersection points, or null if there are no intersections
      */
@@ -26,13 +34,20 @@ protected Box box;
      * A class representing a point and the geometry it intersects.
      */
     public static class GeoPoint {
+        /**
+         * The geometry the point intersects.
+         */
         public Geometry geometry;
+        /**
+         * The point that intersects the geometry.
+         */
         public Point point;
+
         /**
          * Constructs a GeoPoint object with the given geometry and point.
          *
          * @param geometry The geometry the point intersects.
-         * @param point The point that intersects the geometry.
+         * @param point    The point that intersects the geometry.
          */
         public GeoPoint(Geometry geometry, Point point) {
             this.geometry = geometry;
@@ -60,10 +75,12 @@ protected Box box;
     /**
      * Finds all intersection points between the given ray and the geometrical object.
      *
-     * @param ray the ray to intersect with the geometrical object
-     * @return a list of intersection points (of type {@link GeoPoint}), or an empty list if there are no intersections
+     * @param ray         the ray to intersect with the geometrical object
+     * @param maxDistance the maximum distance for intersection
+     * @return a boolean value indicating whether the ray intersects the geometrical object
      */
     public abstract boolean isIntersectBox(Ray ray, double maxDistance);
+
     /**
      * Constructs the Axis-Aligned Bounding Box (AABB) for the geometrical object.
      */
@@ -79,10 +96,11 @@ protected Box box;
     public final List<GeoPoint> findGeoIntersections(Ray ray) {
         return findGeoIntersections(ray, Double.POSITIVE_INFINITY);
     }
+
     /**
      * Finds all intersection points between the given ray and the geometrical object.
      *
-     * @param ray the ray to intersect with the geometrical object
+     * @param ray         the ray to intersect with the geometrical object
      * @param maxDistance the maximum distance for intersection
      * @return a list of intersection points (of type {@link GeoPoint}), or an empty list if there are no intersections
      */
@@ -96,7 +114,7 @@ protected Box box;
     /**
      * Finds all intersection points between the given ray and the geometrical object.
      *
-     * @param ray the ray to intersect with the geometrical object
+     * @param ray         the ray to intersect with the geometrical object
      * @param maxDistance the maximum distance for intersection
      * @return a list of intersection points (of type {@link GeoPoint}), or an empty list if there are no intersections
      */
@@ -107,12 +125,12 @@ protected Box box;
      * Constructs the Axis-Aligned Bounding Box (AABB) for the geometrical object.
      */
     public static class Box {
-        private final double minX;
-        private final double minY;
-        private final double minZ;
-        private final double maxX;
-        private final double maxY;
-        private final double maxZ;
+        public final double minX;
+        public final double minY;
+        public final double minZ;
+        public final double maxX;
+        public final double maxY;
+        public final double maxZ;
 
         /**
          * Constructs an Axis-Aligned Bounding Box (AABB) with the given minimum and maximum coordinates.

@@ -21,6 +21,10 @@ import java.io.IOException;
  * @author Dan
  */
 public class RenderTests {
+    /**
+     * constructor
+     */
+    public RenderTests() {}
     /** Scene of the tests */
     private final Scene          scene  = new Scene("Test scene");
     /** Camera builder of the tests */
@@ -84,7 +88,10 @@ public class RenderTests {
                 .writeToImage();
     }
 
-
+/**
+     * Produce a scene with basic 3D model - including individual lights of the
+     * bodies and render it into a png image with a grid
+     */
     @Test
     public void renderMultiColorTestAntiAliasing() {
         scene.geometries.add( // center
@@ -134,7 +141,9 @@ public class RenderTests {
         });
     }
 
-
+    /**
+     * Produce a scene with basic 3D model of a diamond ring and render it into a png
+     */
     @Test
     public void diamonedRing() {
 
@@ -161,7 +170,9 @@ public class RenderTests {
     }
 
 
-
+/**
+     * Produce a scene with basic 3D model of a diamond ring and render it into a png
+ */
     @Test
     public void diamonedRingAntiAliasing() {
 

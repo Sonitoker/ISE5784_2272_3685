@@ -19,7 +19,7 @@ public class Vector extends Point {
      * @throws IllegalArgumentException if the vector is the zero vector.
      */
     public Vector(double x, double y, double z) {
-        this(new Double3(x,y,z));
+        this(new Double3(x, y, z));
     }
 
 
@@ -29,7 +29,7 @@ public class Vector extends Point {
      * @param xyz The Double3 containing the coordinates of the vector.
      * @throws IllegalArgumentException if the vector is the zero vector.
      */
-     Vector(Double3 xyz) {
+    Vector(Double3 xyz) {
         super(xyz);
         if (xyz.equals(Double3.ZERO)) {
             throw new IllegalArgumentException("Cannot create zero vector");
@@ -43,7 +43,6 @@ public class Vector extends Point {
         if (!(o instanceof Vector vector)) return false;
         return xyz.equals(vector.xyz);
     }
-
 
 
     @Override
@@ -106,7 +105,6 @@ public class Vector extends Point {
     }
 
 
-
     /**
      * Computes the length of this vector.
      *
@@ -119,6 +117,7 @@ public class Vector extends Point {
 
     /**
      * normalize the vector
+     *
      * @return the normalized vector
      */
     public Vector normalize() {

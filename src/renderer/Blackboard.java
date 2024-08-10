@@ -6,13 +6,18 @@ package renderer;
  * It stores the grid size and the anti-aliasing flag
  */
 public class Blackboard {
-    /** The grid size */
+    /**
+     * The grid size
+     */
     private int gridSize; // e.g., 9 for 9x9 grid
-    /** The anti-aliasing flag */
+    /**
+     * The anti-aliasing flag
+     */
     private boolean isAntiAliasingEnabled;
 
     /**
      * Blackboard constructor
+     *
      * @param gridSize the grid size
      */
     public Blackboard(int gridSize) {
@@ -22,6 +27,7 @@ public class Blackboard {
 
     /**
      * getthe grid size
+     *
      * @return the grid size
      */
     public int getGridSize() {
@@ -30,6 +36,7 @@ public class Blackboard {
 
     /**
      * set the grid size
+     *
      * @param gridSize the grid size
      * @return the Blackboard
      */
@@ -40,6 +47,7 @@ public class Blackboard {
 
     /**
      * get the anti-aliasing flag
+     *
      * @return the anti-aliasing flag
      */
     public boolean isAntiAliasingEnabled() {
@@ -48,6 +56,7 @@ public class Blackboard {
 
     /**
      * set the anti-aliasing flag
+     *
      * @param isAntiAliasingEnabled the anti-aliasing flag
      * @return the Blackboard
      */

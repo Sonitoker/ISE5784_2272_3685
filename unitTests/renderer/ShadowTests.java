@@ -14,6 +14,9 @@ import Scene.Scene;
 /** Testing basic shadows
  * @author Dan */
 public class ShadowTests {
+    /** Constructor for the tests */
+    public ShadowTests() {
+    }
     /** Scene of the tests */
     private final Scene          scene      = new Scene("Test scene");
     /** Camera builder of the tests */

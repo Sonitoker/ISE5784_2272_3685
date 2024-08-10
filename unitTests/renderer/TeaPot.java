@@ -10,14 +10,18 @@ import primitives.Point;
 import primitives.Vector;
 import Scene.Scene;
 
+
 /**
  * Test rendering an image
  *
  * @author Dan
  */
-
-
 public class TeaPot {
+    /**
+     * Produce a picture of a teapot
+     */
+    public TeaPot() {
+    }
     private final Scene scene = new Scene("Test scene");
     private static final Color color = new Color(200, 0, 0);
     private static final Material mat = new Material().setKd(0.5).setKs(0.5).setShininess(60);

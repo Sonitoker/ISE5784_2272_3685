@@ -48,8 +48,8 @@ public class Tube extends RadialGeometry {
         // Project the above vector on the axis direction to find the projection point on the axis
         double t = axis.getDir().dotProduct(vectorFromAxisStart);
         Point o;
-        if(isZero(t))
-            o=axis.getHead();
+        if (isZero(t))
+            o = axis.getHead();
         else
             o = axis.getPoint(t);
 
@@ -60,6 +60,7 @@ public class Tube extends RadialGeometry {
 
 
     }
+
     /**
      * Finds the intersections of the specified ray with the tube.
      *
@@ -97,17 +98,16 @@ public class Tube extends RadialGeometry {
         try {
             deltaP = p0.subtract(axis.getHead());
         } catch (IllegalArgumentException e1) {
-            if(vVa==0){
-                if(alignZero(t)<=0)
+            if (vVa == 0) {
+                if (alignZero(t) <= 0)
                     return null;
-                if(alignZero(radius-maxDistance)<=0)
-                    return List.of(new GeoPoint(this,ray.getPoint(radius)));
-            }
-            else{
-                if(alignZero(t)<=0)
+                if (alignZero(radius - maxDistance) <= 0)
+                    return List.of(new GeoPoint(this, ray.getPoint(radius)));
+            } else {
+                if (alignZero(t) <= 0)
                     return null;
-                if(alignZero(t-maxDistance)<=0)
-                    return List.of(new GeoPoint(this,ray.getPoint(t)));
+                if (alignZero(t - maxDistance) <= 0)
+                    return List.of(new GeoPoint(this, ray.getPoint(t)));
             }
         }
 
@@ -123,9 +123,8 @@ public class Tube extends RadialGeometry {
             } catch (IllegalArgumentException e1) {
                 if (alignZero(t) <= 0) {
                     return null;
-                }
-                else {
-                    if(alignZero(t-maxDistance)<=0)
+                } else {
+                    if (alignZero(t - maxDistance) <= 0)
                         return List.of(new GeoPoint(this, ray.getPoint(t)));
                 }
             }
@@ -140,9 +139,8 @@ public class Tube extends RadialGeometry {
         }
 
         double doubleA = 2 * A;
-        return buildIntersectionsList(ray,maxDistance, alignZero(-B / doubleA), Math.sqrt(discriminant) / doubleA);
+        return buildIntersectionsList(ray, maxDistance, alignZero(-B / doubleA), Math.sqrt(discriminant) / doubleA);
     }
-
 
 
     /**
@@ -159,12 +157,12 @@ public class Tube extends RadialGeometry {
         double t1 = alignZero(tMiddle - tOffset);
         double t2 = alignZero(tMiddle + tOffset);
 
-        if (t1 > 0 && alignZero(t1-maxDistance)<=0) {
-            intersections.add(new GeoPoint(this,ray.getPoint(t1)));
+        if (t1 > 0 && alignZero(t1 - maxDistance) <= 0) {
+            intersections.add(new GeoPoint(this, ray.getPoint(t1)));
         }
 
-        if (t2 > 0 && alignZero(t2-maxDistance)<=0) {
-            intersections.add(new GeoPoint(this,ray.getPoint(t2)));
+        if (t2 > 0 && alignZero(t2 - maxDistance) <= 0) {
+            intersections.add(new GeoPoint(this, ray.getPoint(t2)));
         }
 
         return intersections.isEmpty() ? null : intersections;

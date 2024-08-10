@@ -14,11 +14,29 @@ import java.util.List;
  * A scene is a collection of geometries and a background color.
  */
 public class Scene {
+    /**
+     * The name of the scene.
+     */
     public String name;
+    /**
+     * The background color of the scene.
+     */
     public Color background = Color.BLACK;
+    /**
+     * The ambient light of the scene.
+     */
     public AmbientLight ambientLight = AmbientLight.NONE;
+    /**
+     * The geometries of the scene.
+     */
     public Geometries geometries = new Geometries();
+    /**
+     * The lights of the scene.
+     */
     public List<LightSource> lights = new LinkedList<>();
+    /**
+     * The BVH improvement flag
+     */
     public boolean isBVH = false;
 
     /**

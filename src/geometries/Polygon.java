@@ -16,7 +16,7 @@ import primitives.Vector;
  *
  * @author Dan
  */
-public class Polygon extends  Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -98,9 +98,9 @@ public class Polygon extends  Geometry {
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         //Finding an intersection with the plane of the Polygon
-        List<GeoPoint> intersectionWithPlane =  this.plane.findGeoIntersections(ray, maxDistance);
+        List<GeoPoint> intersectionWithPlane = this.plane.findGeoIntersections(ray, maxDistance);
 
-        if(intersectionWithPlane == null)
+        if (intersectionWithPlane == null)
             return null;
 
         List<Vector> vectors = new LinkedList<>();
@@ -123,7 +123,7 @@ public class Polygon extends  Geometry {
         }
 
         //If one of the scalar products is zero - no cutting
-        if(scalars.contains(0))
+        if (scalars.contains(0))
             return null;
 
         //If all the scalar lines have the same sign - then the intersection with the plane cuts the triangle
@@ -134,34 +134,35 @@ public class Polygon extends  Geometry {
                 return null;
             }
         }
-        return  List.of(new GeoPoint(this, intersectionWithPlane.getFirst().point));
+        return List.of(new GeoPoint(this, intersectionWithPlane.getFirst().point));
     }
+
     @Override
     public void constructBox() {
         Point first = vertices.get(0);
-        double minX=first.getX();
-        double maxX=first.getX();
-        double minY=first.getY();
-        double maxY=first.getY();
-        double minZ=first.getZ();
-        double maxZ=first.getZ();
-        for(Point p:vertices){
-            double X=p.getX();
-            double Y=p.getY();
-            double Z=p.getZ();
-            if(X<minX)minX=X;
-            if(X>maxX)maxX=X;
-            if(Y<minY)minY=Y;
-            if(Y>maxY)maxY=Y;
-            if(Z<minZ)minZ=Z;
-            if(Z>maxZ)maxZ=Z;
+        double minX = first.getX();
+        double maxX = first.getX();
+        double minY = first.getY();
+        double maxY = first.getY();
+        double minZ = first.getZ();
+        double maxZ = first.getZ();
+        for (Point p : vertices) {
+            double X = p.getX();
+            double Y = p.getY();
+            double Z = p.getZ();
+            if (X < minX) minX = X;
+            if (X > maxX) maxX = X;
+            if (Y < minY) minY = Y;
+            if (Y > maxY) maxY = Y;
+            if (Z < minZ) minZ = Z;
+            if (Z > maxZ) maxZ = Z;
         }
-        box=new Box(minX,minY,minZ,maxX,maxY,maxZ);
+        box = new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     @Override
     public boolean isIntersectBox(Ray ray, double maxDistance) {
-        return box.intersects(ray,maxDistance);
+        return box.intersects(ray, maxDistance);
     }
 
 

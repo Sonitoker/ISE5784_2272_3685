@@ -15,6 +15,11 @@ import Scene.Scene;
  */
 public class LightsTests {
     /**
+     * The tests for the lighting in the scene
+     */
+    public LightsTests() {
+    }
+    /**
      * First scene for some of tests
      */
     private final Scene scene1 = new Scene("Test scene");
@@ -259,6 +264,9 @@ public class LightsTests {
                 .writeToImage();
     }
 
+    /**
+     * Produce a picture of a sphere lighted by a spotlight with a penumbra
+     */
     @Test
     public void sphereAllLights() {
         scene1.geometries.add(sphere);
@@ -272,6 +280,9 @@ public class LightsTests {
                 .writeToImage();
     }
 
+    /**
+     * Produce a picture of two triangles lighted by a spotlight with a penumbra
+     */
     @Test
     public void triangleAllLights() {
         scene2.geometries.add(triangle1, triangle2);

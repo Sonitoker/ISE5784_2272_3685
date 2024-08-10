@@ -6,11 +6,14 @@ package geometries;
  */
 public abstract class RadialGeometry extends Geometry {
 
-    /** The radius of the geometry. */
+    /**
+     * The radius of the geometry.
+     */
     protected final double radius;
 
     /**
      * Constructs a RadialGeometry object with the given radius.
+     *
      * @param radius The radius of the geometry.
      */
     public RadialGeometry(double radius) {

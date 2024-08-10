@@ -19,19 +19,38 @@ import static primitives.Util.isZero;
  */
 public class Camera implements Cloneable {
 
-
+    /**
+     * The location of the camera.
+     */
     private Point p0;
+    /**
+     * The direction of the camera.
+     */
     private Vector vTo, vUp, vRight;
+    /**
+     * The width of the view plane.
+     */
     private double width = 0d, height = 0d, distance = 0d;
+    /**
+     * The image writer.
+     */
     private ImageWriter imageWriter;
+    /**
+     * The ray tracer.
+     */
     private RayTracerBase rayTracer;
+    /**
+     * The blackboard.
+     */
     private Blackboard blackboard;
-
-
-    ///
+    /**
+     * The number of threads to use
+     */
     private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+    /**
+     * The interval between the prints
+     */
     private double printInterval = 0; // printing progress percentage interval
-
 
 
     /**
@@ -80,17 +99,23 @@ public class Camera implements Cloneable {
     /**
      * Camera builder class
      * The builder constructs a camera with a location, a direction, and a size of the view plane.
-     *
      */
     public static class Builder {
+        /**
+         * Builder constructor
+         */
+        public Builder() {
+        }
+
         /**
          * The camera to build
          */
         private final Camera camera = new Camera();
 
-        ///
-         private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
-
+        /**
+         * The number of spare threads if trying to use all the cores
+         */
+        private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
 
 
         /**
@@ -183,6 +208,12 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Set the multithreading
+         *
+         * @param threads the number of threads to use
+         * @return the camera builder
+         */
         public Builder setMultithreading(int threads) {
             if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
             if (threads >= -1) camera.threadsCount = threads;
@@ -192,12 +223,17 @@ public class Camera implements Cloneable {
             }
             return this;
         }
-        public Builder  setDebugPrint(double interval) {
+
+        /**
+         * Set the debug print
+         *
+         * @param interval the interval between the prints
+         * @return the camera builder
+         */
+        public Builder setDebugPrint(double interval) {
             camera.printInterval = interval;
             return this;
         }
-
-
 
 
         /**
@@ -206,8 +242,15 @@ public class Camera implements Cloneable {
          * @return the camera
          */
         public Camera build() {
-
+            /*
+             * The camera must have a location, a direction, a size of the view plane, a distance between the camera and the view plane,
+             * an image writer, and a ray tracer.
+             */
             final String description = "Missing rendering data";
+            /*
+             * The camera must have a location, a direction, a size of the view plane, a distance between the camera and the view plane,
+             * an image writer, and a ray tracer.
+             */
             final String className = "Camera";
             if (camera.p0 == null) {
                 throw new MissingResourceException(description, className, "p0");
@@ -227,10 +270,10 @@ public class Camera implements Cloneable {
             if (isZero(camera.distance)) {
                 throw new MissingResourceException(description, className, "distance");
             }
-            if(camera.imageWriter == null) {
+            if (camera.imageWriter == null) {
                 throw new MissingResourceException(description, className, "imageWriter");
             }
-            if(camera.rayTracer == null) {
+            if (camera.rayTracer == null) {
                 throw new MissingResourceException(description, className, "rayTracer");
             }
             if (camera.blackboard == null) {
@@ -252,7 +295,7 @@ public class Camera implements Cloneable {
             if (!isZero(camera.vTo.dotProduct(camera.vRight)) || !isZero(camera.vTo.dotProduct(camera.vUp)) || !isZero(camera.vUp.dotProduct(camera.vRight))) {
                 throw new IllegalArgumentException("The 3 vectors must be orthogonal");
             }
-            if (alignZero(camera.vTo.length() )!= 1 || camera.vRight.length() != 1 || camera.vUp.length() != 1) {
+            if (alignZero(camera.vTo.length()) != 1 || camera.vRight.length() != 1 || camera.vUp.length() != 1) {
                 throw new IllegalArgumentException("The 3 vectors must be normalized");
             }
 
@@ -310,8 +353,8 @@ public class Camera implements Cloneable {
 
         for (int subI = 0; subI < gridSize; subI++) {
             for (int subJ = 0; subJ < gridSize; subJ++) {
-                double jitterY = random.nextDouble()%gridSize; // Random offset in Y direction
-                double jitterX = random.nextDouble()%gridSize; // Random offset in X direction
+                double jitterY = random.nextDouble() % gridSize; // Random offset in Y direction
+                double jitterX = random.nextDouble() % gridSize; // Random offset in X direction
 
                 double offsetI = (subI + jitterY) * stepY;
                 double offsetJ = (subJ + jitterX) * stepX;
@@ -330,16 +373,15 @@ public class Camera implements Cloneable {
     }
 
 
-
     /**
      * Render the image
+     *
      * @return the camera
      */
     public Camera renderImage() {
 
         int nX = imageWriter.getNx();
         int nY = imageWriter.getNy();
-        ///
         Pixel.initialize(nY, nX, printInterval);
         if (threadsCount == 0)
             for (int i = 0; i < nY; i++)
@@ -363,20 +405,19 @@ public class Camera implements Cloneable {
      * @param i  the y index of the pixel
      */
     private void castRay(int nX, int nY, int j, int i) {
-        if(blackboard.isAntiAliasingEnabled()) {
+        if (blackboard.isAntiAliasingEnabled()) {
             List<Ray> rays = constructRays(nX, nY, j, i);
             Color color = Color.BLACK;
             for (Ray ray : rays) {
                 color = color.add(rayTracer.traceRay(ray));
             }
-            color = color.scale(1d/rays.size());
+            color = color.scale(1d / rays.size());
             imageWriter.writePixel(j, i, color);
         } else {
             Ray ray = constructRay(nX, nY, j, i);
-            Color color= rayTracer.traceRay(ray);
+            Color color = rayTracer.traceRay(ray);
             imageWriter.writePixel(j, i, color);
         }
-        ///
         Pixel.pixelDone();
 
     }
@@ -384,33 +425,33 @@ public class Camera implements Cloneable {
 
     /**
      * Print a grid on the view plane
-     * @param interval
-     * @param color
+     *
+     * @param interval the interval between the lines of the grid
+     * @param color    the color of the grid
      * @return the camera
      */
-        public Camera printGrid(int interval, Color color) {
-            //=== running on the view plane===//
-            for (int i = 0; i < imageWriter.getNx(); i++) {
-                for (int j = 0; j < imageWriter.getNy(); j++) {
-                    //=== create the net ===//
-                    if (i % interval == 0 || j % interval == 0) {
-                        imageWriter.writePixel(i, j, color);
-                    }
+    public Camera printGrid(int interval, Color color) {
+        //=== running on the view plane===//
+        for (int i = 0; i < imageWriter.getNx(); i++) {
+            for (int j = 0; j < imageWriter.getNy(); j++) {
+                //=== create the net ===//
+                if (i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(i, j, color);
                 }
             }
-            return this;
         }
-
-        /**
-         * Write the image to the file
-         */
-        public void writeToImage() {
-            this.imageWriter.writeToImage();
-        }
-
-
-
+        return this;
     }
+
+    /**
+     * Write the image to the file
+     */
+    public void writeToImage() {
+        this.imageWriter.writeToImage();
+    }
+
+
+}
 
 
 

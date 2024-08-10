@@ -47,7 +47,7 @@ public class Sphere extends RadialGeometry {
         Point O = center; //the sphere's center point
         Vector V = ray.getDir(); // "the v vector" from the presentation
         if (O.equals(P0)) {
-            return List.of(new GeoPoint(this,ray.getPoint(radius)));
+            return List.of(new GeoPoint(this, ray.getPoint(radius)));
         }
         Vector U = O.subtract(P0);
         double tm = V.dotProduct(U);
@@ -61,13 +61,13 @@ public class Sphere extends RadialGeometry {
         if (t1 > 0 && t2 > 0 && alignZero(t1 - maxDistance) <= 0 && alignZero(t2 - maxDistance) <= 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
-            return List.of(new GeoPoint(this,p1), new GeoPoint(this,p2));
+            return List.of(new GeoPoint(this, p1), new GeoPoint(this, p2));
         } else if (t1 > 0 && alignZero(t1 - maxDistance) <= 0) {
             Point p1 = ray.getPoint(t1);
-            return List.of(new GeoPoint(this,p1));
+            return List.of(new GeoPoint(this, p1));
         } else if (t2 > 0 && alignZero(t2 - maxDistance) <= 0) {
             Point p2 = ray.getPoint(t2);
-            return List.of(new GeoPoint(this,p2));
+            return List.of(new GeoPoint(this, p2));
         }
         return null;
 
@@ -75,20 +75,20 @@ public class Sphere extends RadialGeometry {
 
     @Override
     public void constructBox() {
-        double X=center.getX();
-        double Y=center.getY();
-        double Z=center.getZ();
-        double minX =X  - radius;
+        double X = center.getX();
+        double Y = center.getY();
+        double Z = center.getZ();
+        double minX = X - radius;
         double minY = Y - radius;
         double minZ = Z - radius;
         double maxX = X + radius;
         double maxY = Y + radius;
         double maxZ = Z + radius;
-        box=new Box(minX,minY,minZ,maxX,maxY,maxZ);
+        box = new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     @Override
     public boolean isIntersectBox(Ray ray, double maxDistance) {
-        return box.intersects(ray,maxDistance);
+        return box.intersects(ray, maxDistance);
     }
 }

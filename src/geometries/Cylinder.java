@@ -119,6 +119,7 @@ public class Cylinder extends Tube {
 
         return geoPoints.isEmpty() ? null : geoPoints;
     }
+
     @Override
     public void constructBox() {
         Point endPoint1 = axis.getHead().add(axis.getDir().scale(height));
@@ -130,10 +131,11 @@ public class Cylinder extends Tube {
         double maxY = Math.max(startPoint.getY(), endPoint1.getY()) + radius;
         double minZ = Math.min(startPoint.getZ(), endPoint1.getZ()) - radius;
         double maxZ = Math.max(startPoint.getZ(), endPoint1.getZ()) + radius;
-        box = new Box(minX,minY,minZ,maxX,maxY,maxZ);
+        box = new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
+
     @Override
     public boolean isIntersectBox(Ray ray, double maxDistance) {
-        return box.intersects(ray,maxDistance);
+        return box.intersects(ray, maxDistance);
     }
 }

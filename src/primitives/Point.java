@@ -108,6 +108,7 @@ public class Point {
     public double getX() {
         return xyz.d1;
     }
+
     /**
      * Returns the y-coordinate of the point.
      *
@@ -116,6 +117,7 @@ public class Point {
     public double getY() {
         return xyz.d2;
     }
+
     /**
      * Returns the z-coordinate of the point.
      *
@@ -133,10 +135,14 @@ public class Point {
      */
     public double getCoord(int index) {
         switch (index) {
-            case 0: return xyz.d1;
-            case 1: return xyz.d2;
-            case 2: return xyz.d3;
-            default: throw new IllegalArgumentException("Index must be 0, 1, or 2");
+            case 0:
+                return xyz.d1;
+            case 1:
+                return xyz.d2;
+            case 2:
+                return xyz.d3;
+            default:
+                throw new IllegalArgumentException("Index must be 0, 1, or 2");
         }
     }
 

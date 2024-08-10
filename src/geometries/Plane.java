@@ -14,7 +14,7 @@ import static primitives.Util.isZero;
  * The Plane class represents a plane geometry in 3D space.
  * It implements the Geometry interface.
  */
-public class Plane extends  Geometry {
+public class Plane extends Geometry {
 
     /**
      * A point on the plane.
@@ -59,7 +59,11 @@ public class Plane extends  Geometry {
         return normal;
     }
 
-
+    /**
+     * Returns the point on the plane.
+     *
+     * @return The point on the plane.
+     */
     public Point getQ() {
         return q;
     }
@@ -86,12 +90,13 @@ public class Plane extends  Geometry {
         // t = (q - p0) * n / nv calculate the distance from the ray's head to the intersection point
         double t = alignZero(normal.dotProduct(q.subtract(ray.getHead())) / nv);
         if (t > 0 && alignZero(t - maxDistance) <= 0) {
-            return List.of(new GeoPoint(this,ray.getPoint(t)));
+            return List.of(new GeoPoint(this, ray.getPoint(t)));
         } else {
             return null;
 
         }
     }
+
     @Override
     public boolean isIntersectBox(Ray ray, double maxDistance) {
         return true;
