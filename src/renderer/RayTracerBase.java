@@ -1,6 +1,5 @@
 package renderer;
-
-import Scene.Scene;
+import  Scene.Scene;
 import primitives.Color;
 import primitives.Ray;
 
@@ -8,19 +7,17 @@ import primitives.Ray;
  * RayTracerBase class represents a base class for ray tracers.
  * A ray tracer is a class that renders a scene by tracing rays from the camera to the scene.
  */
-public abstract class RayTracerBase {
+public abstract class  RayTracerBase  {
     /**
      * The scene to render.
      */
     protected Scene scene;
-
     /**
      * Constructs a RayTracerBase object with the given scene.
-     *
      * @param scene The scene to render.
      */
     public RayTracerBase(Scene scene) {
-        if (scene.isBVH)
+        if(scene.isBVH)
             scene.geometries.setBoxes();
         this.scene = scene;
     }
@@ -28,7 +25,6 @@ public abstract class RayTracerBase {
 
     /**
      * Traces a ray through the scene and returns the color of the intersection point.
-     *
      * @param ray The ray to trace.
      * @return The color of the intersection point.
      */

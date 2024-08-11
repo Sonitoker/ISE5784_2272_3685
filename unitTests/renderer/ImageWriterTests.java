@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ImageWriterTests {
 
 
-    //==== the size of the view plane =====//
+    //==== the size of the view plane ====//
     int nX = 800;
     int nY = 500;
 

@@ -93,5 +93,9 @@ public class Scene {
         this.lights = lights;
         return this;
     }
+
+    public void setBVH(boolean flag) {
+        isBVH = flag;
+    }
 }
 
